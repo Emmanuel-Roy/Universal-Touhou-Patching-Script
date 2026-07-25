@@ -140,15 +140,11 @@ if (-not (Test-Path $targetD3dx9) -or $ForceReinstall) {
     Write-Host "[+] Installing Microsoft DirectX 9 Extensions (d3dx9_43.dll)..." -ForegroundColor Green
     
     $sysDll = "$env:SystemRoot\SysWOW64\d3dx9_43.dll"
-    $scriptLocalDll = Join-Path $PSScriptRoot "d3dx9_43.dll"
     $knownLocalDll = "C:\Users\royem\Games\Touhou 6 - The Embodiment of Scarlet Devil\d3dx9_43.dll"
 
     if (Test-Path $sysDll) {
         Copy-Item $sysDll $targetD3dx9 -Force
         Write-Host "    [OK] d3dx9_43.dll copied from Windows SysWOW64 system directory." -ForegroundColor Gray
-    } elseif (Test-Path $scriptLocalDll) {
-        Copy-Item $scriptLocalDll $targetD3dx9 -Force
-        Write-Host "    [OK] d3dx9_43.dll copied from local installer folder." -ForegroundColor Gray
     } elseif (Test-Path $knownLocalDll) {
         Copy-Item $knownLocalDll $targetD3dx9 -Force
         Write-Host "    [OK] d3dx9_43.dll copied from local Touhou 6 directory." -ForegroundColor Gray
