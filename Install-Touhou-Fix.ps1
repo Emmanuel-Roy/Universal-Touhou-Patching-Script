@@ -1,15 +1,13 @@
 <#
 .SYNOPSIS
-    Universal Single-Script Automated Installer for Touhou 6, 7, and 8 (x86, x64, and ARM64 Windows 10/11).
+    Universal Single-Script Automated Installer for ALL Touhou Windows Games (TH06 through TH19).
 .DESCRIPTION
-    Automated one-stop-shop installer for classic Touhou games:
-    - Touhou 6: The Embodiment of Scarlet Devil (th06)
-    - Touhou 7: Perfect Cherry Blossom (th07)
-    - Touhou 8: Imperishable Night (th08)
+    Automated one-stop-shop installer for Touhou games on Windows 10/11 & ARM64:
+    - Touhou 6 through Touhou 19 (th06, th07, th08, th09, th095, th10, th11, th12, th123, th125, th128, th13, th14, th143, th15, th16, th165, th17, th18, th185, th19)
 
     Automatically installs and configures:
-    - THCRAP English translation patches for each detected game automatically
-    - Crosire d3d8to9 wrapper (DirectX 8 -> DirectX 9/12)
+    - THCRAP English translation patches for all detected games automatically
+    - Crosire d3d8to9 wrapper (DirectX 8 -> DirectX 9/12 for TH06-TH08)
     - Microsoft d3dx9_43.dll 32-bit runtime (fixes thcrap missing DLL error)
     - Windowed mode & VPatch 60 FPS resolution configuration
     - Launcher shortcuts for English, VPatch, Original, and Settings
@@ -25,67 +23,88 @@ $ErrorActionPreference = "Stop"
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 Write-Host "========================================================" -ForegroundColor Cyan
-Write-Host " Touhou 6, 7 and 8: Universal Modern Windows Setup" -ForegroundColor Cyan
-Write-Host " (Supports x86, x64, and ARM64 Windows 10 and 11)" -ForegroundColor Gray
+Write-Host " Touhou Complete Series: Universal Windows Setup" -ForegroundColor Cyan
+Write-Host " (Supports Touhou 06 through Touhou 19 on x86, x64, ARM64)" -ForegroundColor Gray
 Write-Host "========================================================" -ForegroundColor Cyan
 
-# 1. Detect Installed Touhou Games (TH06, TH07, TH08)
-$allExes = Get-ChildItem -Path $GamePath -Filter "*.exe" -ErrorAction SilentlyContinue
+# Define Touhou Game Database using pure ASCII patterns and size ranges
+$gameDb = @(
+    @{ Id="th06";  Name="Touhou 06: The Embodiment of Scarlet Devil"; Pattern="*th06*.exe"; MinSize=450KB;  MaxSize=650KB },
+    @{ Id="th07";  Name="Touhou 07: Perfect Cherry Blossom";         Pattern="*th07*.exe"; MinSize=800KB;  MaxSize=1150KB },
+    @{ Id="th08";  Name="Touhou 08: Imperishable Night";            Pattern="*th08*.exe"; MinSize=1200KB; MaxSize=1850KB },
+    @{ Id="th09";  Name="Touhou 09: Phantasmagoria of Flower View";   Pattern="*th09*.exe"; MinSize=1500KB; MaxSize=2500KB },
+    @{ Id="th095"; Name="Touhou 09.5: Shoot the Bullet";             Pattern="*th095*.exe"; MinSize=1500KB; MaxSize=2500KB },
+    @{ Id="th10";  Name="Touhou 10: Mountain of Faith";             Pattern="*th10*.exe"; MinSize=2000KB; MaxSize=4000KB },
+    @{ Id="th11";  Name="Touhou 11: Subterranean Animism";          Pattern="*th11*.exe"; MinSize=2000KB; MaxSize=4500KB },
+    @{ Id="th12";  Name="Touhou 12: Undefined Fantastic Object";    Pattern="*th12*.exe"; MinSize=2000KB; MaxSize=5000KB },
+    @{ Id="th123"; Name="Touhou 12.3: Hisoutensoku";                Pattern="*th123*.exe"; MinSize=2000KB; MaxSize=6000KB },
+    @{ Id="th125"; Name="Touhou 12.5: Double Spoiler";              Pattern="*th125*.exe"; MinSize=2000KB; MaxSize=5000KB },
+    @{ Id="th128"; Name="Touhou 12.8: Fairy Wars";                  Pattern="*th128*.exe"; MinSize=2000KB; MaxSize=5000KB },
+    @{ Id="th13";  Name="Touhou 13: Ten Desires";                   Pattern="*th13*.exe"; MinSize=2000KB; MaxSize=6000KB },
+    @{ Id="th14";  Name="Touhou 14: Double Dealing Character";     Pattern="*th14*.exe"; MinSize=3000KB; MaxSize=7000KB },
+    @{ Id="th143"; Name="Touhou 14.3: Impossible Spell Card";       Pattern="*th143*.exe"; MinSize=3000KB; MaxSize=7000KB },
+    @{ Id="th15";  Name="Touhou 15: Legacy of Lunatic Kingdom";     Pattern="*th15*.exe"; MinSize=3000KB; MaxSize=8000KB },
+    @{ Id="th16";  Name="Touhou 16: Hidden Star in Four Seasons";   Pattern="*th16*.exe"; MinSize=3000KB; MaxSize=8000KB },
+    @{ Id="th165"; Name="Touhou 16.5: Secret Sealing Auto-dap";    Pattern="*th165*.exe"; MinSize=3000KB; MaxSize=8000KB },
+    @{ Id="th17";  Name="Touhou 17: Wily Beast and Weakest Creature"; Pattern="*th17*.exe"; MinSize=3000KB; MaxSize=9000KB },
+    @{ Id="th18";  Name="Touhou 18: Unconnected Marketeers";        Pattern="*th18*.exe"; MinSize=3000KB; MaxSize=9000KB },
+    @{ Id="th185"; Name="Touhou 18.5: 100th Black Market";          Pattern="*th185*.exe"; MinSize=3000KB; MaxSize=9000KB },
+    @{ Id="th19";  Name="Touhou 19: Unfinished Dream of All Living Ghost"; Pattern="*th19*.exe"; MinSize=4000KB; MaxSize=12000KB }
+)
 
-$th06Jp = $allExes | Where-Object { $_.Name -like "*th06*" -or ($_.Length -ge 450KB -and $_.Length -le 600KB) } | Select-Object -First 1
-$th07Jp = $allExes | Where-Object { $_.Name -like "*th07*" -or ($_.Length -ge 800KB -and $_.Length -le 1100KB) } | Select-Object -First 1
-$th08Jp = $allExes | Where-Object { $_.Name -like "*th08*" -or ($_.Length -ge 1200KB -and $_.Length -le 1800KB) } | Select-Object -First 1
+# 1. Detect Installed Touhou Games
+$allExes = Get-ChildItem -Path $GamePath -Filter "*.exe" -ErrorAction SilentlyContinue | Where-Object { $_.Name -notlike "dx_*" -and $_.Name -notlike "dgVoodoo*" }
 
-$hasTh06 = (Test-Path "$GamePath\th06.exe") -or [bool]$th06Jp
-$hasTh07 = (Test-Path "$GamePath\th07.exe") -or [bool]$th07Jp
-$hasTh08 = (Test-Path "$GamePath\th08.exe") -or [bool]$th08Jp
+$detectedGames = @()
+$detectedGameMap = @{}
 
-if (-not $hasTh06 -and -not $hasTh07 -and -not $hasTh08) {
-    Write-Host "[!] Error: No classic Touhou executable (TH06, TH07, or TH08) found in:" -ForegroundColor Red
+foreach ($entry in $gameDb) {
+    $id = $entry.Id
+    $name = $entry.Name
+    
+    $matchedExe = $null
+    if (Test-Path "$GamePath\$id.exe") {
+        $matchedExe = Get-Item "$GamePath\$id.exe"
+    } else {
+        $matchedExe = $allExes | Where-Object { $_.Name -like $entry.Pattern } | Select-Object -First 1
+        if (-not $matchedExe) {
+            $matchedExe = $allExes | Where-Object { $_.Name -notlike "custom*" -and $_.Name -notlike "vpatch*" -and $_.Length -ge $entry.MinSize -and $_.Length -le $entry.MaxSize } | Select-Object -First 1
+        }
+    }
+    
+    if ($matchedExe) {
+        if (-not (Test-Path "$GamePath\$id.exe")) {
+            Copy-Item $matchedExe.FullName "$GamePath\$id.exe" -Force
+        }
+        $detectedGames += $id
+        $detectedGameMap[$id] = $name
+        Write-Host "[+] Detected $name ($id)" -ForegroundColor Green
+    }
+}
+
+if ($detectedGames.Count -eq 0) {
+    Write-Host "[!] Error: No Touhou game executable (TH06 through TH19) found in:" -ForegroundColor Red
     Write-Host "    $GamePath" -ForegroundColor Red
     Write-Host "    Please run this script inside your Touhou game folder or specify -GamePath." -ForegroundColor Yellow
     exit 1
 }
 
-# Ensure standardized th06.exe, th07.exe, th08.exe exist
-$detectedGames = @()
+# 2. Download Crosire d3d8to9 Wrapper (DirectX 8 -> DirectX 9/12 for TH06-TH08)
+$needsD3d8 = ($detectedGames -contains "th06") -or ($detectedGames -contains "th07") -or ($detectedGames -contains "th08")
 
-if ($hasTh06) {
-    if (-not (Test-Path "$GamePath\th06.exe") -and $th06Jp) {
-        Copy-Item $th06Jp.FullName "$GamePath\th06.exe" -Force
+if ($needsD3d8) {
+    if (-not (Test-Path "$GamePath\d3d8.dll") -or $ForceReinstall) {
+        Write-Host "[+] Installing Crosire d3d8to9 (DirectX 8 to DirectX 9/12 wrapper)..." -ForegroundColor Green
+        $d3d8Url = "https://github.com/crosire/d3d8to9/releases/latest/download/d3d8.dll"
+        try {
+            Invoke-WebRequest -Uri $d3d8Url -OutFile "$GamePath\d3d8.dll" -UseBasicParsing
+            Write-Host "    [OK] d3d8.dll installed successfully." -ForegroundColor Gray
+        } catch {
+            Write-Host "[!] Warning: Failed to download d3d8.dll - using local fallback if available." -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "[+] Crosire d3d8to9 (d3d8.dll) already present. Skipping download." -ForegroundColor Gray
     }
-    $detectedGames += "th06"
-    Write-Host "[+] Detected Touhou 6: The Embodiment of Scarlet Devil (th06)" -ForegroundColor Green
-}
-
-if ($hasTh07) {
-    if (-not (Test-Path "$GamePath\th07.exe") -and $th07Jp) {
-        Copy-Item $th07Jp.FullName "$GamePath\th07.exe" -Force
-    }
-    $detectedGames += "th07"
-    Write-Host "[+] Detected Touhou 7: Perfect Cherry Blossom (th07)" -ForegroundColor Green
-}
-
-if ($hasTh08) {
-    if (-not (Test-Path "$GamePath\th08.exe") -and $th08Jp) {
-        Copy-Item $th08Jp.FullName "$GamePath\th08.exe" -Force
-    }
-    $detectedGames += "th08"
-    Write-Host "[+] Detected Touhou 8: Imperishable Night (th08)" -ForegroundColor Green
-}
-
-# 2. Download Crosire d3d8to9 Wrapper (DirectX 8 -> DirectX 9/12)
-if (-not (Test-Path "$GamePath\d3d8.dll") -or $ForceReinstall) {
-    Write-Host "[+] Installing Crosire d3d8to9 (DirectX 8 to DirectX 9/12 wrapper)..." -ForegroundColor Green
-    $d3d8Url = "https://github.com/crosire/d3d8to9/releases/latest/download/d3d8.dll"
-    try {
-        Invoke-WebRequest -Uri $d3d8Url -OutFile "$GamePath\d3d8.dll" -UseBasicParsing
-        Write-Host "    [OK] d3d8.dll installed successfully." -ForegroundColor Gray
-    } catch {
-        Write-Host "[!] Warning: Failed to download d3d8.dll - using local fallback if available." -ForegroundColor Yellow
-    }
-} else {
-    Write-Host "[+] Crosire d3d8to9 (d3d8.dll) already present. Skipping download." -ForegroundColor Gray
 }
 
 # 3. Download and Install d3dx9_43.dll
@@ -123,7 +142,7 @@ if (-not (Test-Path "$GamePath\d3dx9_43.dll") -or $ForceReinstall) {
 $thcrapInstalled = (Test-Path "$GamePath\thcrap\config\thpatch-en.js") -or (Test-Path "$GamePath\thcrap\bin\thcrap_loader.exe")
 
 if (-not $thcrapInstalled -or $ForceReinstall) {
-    Write-Host "[+] Automatically downloading & installing THCRAP English translation patches..." -ForegroundColor Green
+    Write-Host "[+] Automatically downloading and installing THCRAP English translation patches..." -ForegroundColor Green
     $thcrapZipUrl = "https://github.com/thpatch/thcrap/releases/latest/download/thcrap.zip"
     $thcrapZip = "$GamePath\thcrap_temp.zip"
 
@@ -134,13 +153,10 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
         
         # Configure thcrap/config/games.js
         New-Item -ItemType Directory -Path "$GamePath\thcrap\config" -Force | Out-Null
-        $gamesJsObj = @{
-            "th06" = "../th06.exe"
-            "th06_custom" = "../custom.exe"
-            "th07" = "../th07.exe"
-            "th07_custom" = "../custom.exe"
-            "th08" = "../th08.exe"
-            "th08_custom" = "../custom.exe"
+        $gamesJsObj = @{}
+        foreach ($g in $detectedGames) {
+            $gamesJsObj[$g] = "../$g.exe"
+            $gamesJsObj["${g}_custom"] = "../custom.exe"
         }
         $gamesJsJson = $gamesJsObj | ConvertTo-Json
         Set-Content -Path "$GamePath\thcrap\config\games.js" -Value $gamesJsJson -Encoding UTF8
@@ -188,8 +204,10 @@ $cfgBytes = [byte[]](
 )
 
 foreach ($g in $detectedGames) {
-    if (-not (Test-Path "$GamePath\$g.cfg") -or $ForceReinstall) {
-        [System.IO.File]::WriteAllBytes("$GamePath\$g.cfg", $cfgBytes)
+    if ($g -in @("th06", "th07", "th08")) {
+        if (-not (Test-Path "$GamePath\$g.cfg") -or $ForceReinstall) {
+            [System.IO.File]::WriteAllBytes("$GamePath\$g.cfg", $cfgBytes)
+        }
     }
 }
 
@@ -231,12 +249,6 @@ BugFixTh10Power3 = 1
     Set-Content -Path "$GamePath\vpatch.ini" -Value $vpatchIni -Encoding UTF8
 }
 
-# dgVoodoo.conf
-if (Test-Path "$GamePath\dgVoodoo.conf") {
-    (Get-Content "$GamePath\dgVoodoo.conf") -replace "FullScreenMode\s*=\s*true", "FullScreenMode                       = false" `
-                                           -replace "dgVoodooWatermark\s*=\s*true", "dgVoodooWatermark                   = false" | Set-Content "$GamePath\dgVoodoo.conf"
-}
-
 Write-Host "    [OK] Configurations verified." -ForegroundColor Gray
 
 Write-Host ""
@@ -248,8 +260,9 @@ Write-Host ""
 Write-Host " AVAILABLE LAUNCH AND PLAY OPTIONS:" -ForegroundColor Cyan
 Write-Host ""
 foreach ($g in $detectedGames) {
-    Write-Host " [$g] Launch Options:" -ForegroundColor White
-    Write-Host "   1. English Patched (thcrap) : double-click '$g (thpatch-en).exe' or '$g (thpatch-en).cmd'" -ForegroundColor Yellow
+    $gName = $detectedGameMap[$g]
+    Write-Host " [$g] ($gName):" -ForegroundColor White
+    Write-Host "   1. English Patched (thcrap) : double-click '$g (thpatch-en).cmd' or '$g (thpatch-en).exe'" -ForegroundColor Yellow
     Write-Host "   2. 60 FPS VPatch            : double-click 'vpatch.exe'" -ForegroundColor Yellow
     Write-Host "   3. Original Unpatched Game  : double-click '$g.exe'" -ForegroundColor Yellow
     Write-Host "   4. Settings and Controller  : double-click 'custom.exe'" -ForegroundColor Yellow
