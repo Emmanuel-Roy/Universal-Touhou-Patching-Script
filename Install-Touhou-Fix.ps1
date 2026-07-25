@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-    Universal Single-Script Automated Installer for ALL Touhou Windows Games (TH06 through TH19).
+    Universal Single-Script Automated Installer for ALL Touhou Windows Games (TH06 through TH19, including TH15.5).
 .DESCRIPTION
     Automated one-stop-shop installer for Touhou games on Windows 10/11 & ARM64:
-    - Touhou 6 through Touhou 19 (th06, th07, th08, th09, th095, th10, th11, th12, th123, th125, th128, th13, th14, th143, th15, th16, th165, th17, th18, th185, th19)
+    - Touhou 6 through Touhou 19 & Touhou 15.5 (th06, th07, th08, th09, th095, th10, th11, th12, th123, th125, th128, th13, th14, th143, th15, th155, th16, th165, th17, th18, th185, th19)
 
     Automatically installs and configures:
     - THCRAP English translation patches for all detected games automatically
@@ -44,6 +44,7 @@ $gameDb = @(
     @{ Id="th14";  Name="Touhou 14: Double Dealing Character";     Pattern="*th14*.exe"; MinSize=3000KB; MaxSize=7000KB },
     @{ Id="th143"; Name="Touhou 14.3: Impossible Spell Card";       Pattern="*th143*.exe"; MinSize=3000KB; MaxSize=7000KB },
     @{ Id="th15";  Name="Touhou 15: Legacy of Lunatic Kingdom";     Pattern="*th15*.exe"; MinSize=3000KB; MaxSize=8000KB },
+    @{ Id="th155"; Name="Touhou 15.5: Antinomy of Common Flowers"; Pattern="*th155*.exe"; MinSize=5000KB; MaxSize=40000KB },
     @{ Id="th16";  Name="Touhou 16: Hidden Star in Four Seasons";   Pattern="*th16*.exe"; MinSize=3000KB; MaxSize=8000KB },
     @{ Id="th165"; Name="Touhou 16.5: Secret Sealing Auto-dap";    Pattern="*th165*.exe"; MinSize=3000KB; MaxSize=8000KB },
     @{ Id="th17";  Name="Touhou 17: Wily Beast and Weakest Creature"; Pattern="*th17*.exe"; MinSize=3000KB; MaxSize=9000KB },

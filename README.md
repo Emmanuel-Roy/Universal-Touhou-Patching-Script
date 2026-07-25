@@ -6,13 +6,13 @@
 
 ---
 
-A self-contained, single-script installer (**`Install-Touhou-Fix.ps1`**) that **automatically downloads, installs, and configures English translation patches for ALL Touhou Windows games (Touhou 6 through Touhou 19)** and gets them running natively on modern **Windows 10 / Windows 11 (x86, x64, and ARM64 PCs)**.
+A self-contained, single-script installer (**`Install-Touhou-Fix.ps1`**) that **automatically downloads, installs, and configures English translation patches for ALL Touhou Windows games (Touhou 6 through Touhou 19, including Touhou 15.5)** and gets them running natively on modern **Windows 10 / Windows 11 (x86, x64, and ARM64 PCs)**.
 
 Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-speed bugs, missing DirectX runtimes, and `thcrap` `"failed to learn d3dx9_43.dll"` warnings in one click.
 
 ---
 
-## 🎮 Supported Games (Touhou 06 – Touhou 19)
+## 🎮 Supported Games (Touhou 06 – Touhou 19 & 15.5)
 
 | Game ID | Full Title |
 |---|---|
@@ -31,6 +31,7 @@ Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-spe
 | **th14** | Touhou 14: Double Dealing Character |
 | **th143** | Touhou 14.3: Impossible Spell Card |
 | **th15** | Touhou 15: Legacy of Lunatic Kingdom |
+| **th155** | Touhou 15.5: Antinomy of Common Flowers |
 | **th16** | Touhou 16: Hidden Star in Four Seasons |
 | **th165** | Touhou 16.5: Secret Sealing Auto-dap |
 | **th17** | Touhou 17: Wily Beast and Weakest Creature |
@@ -42,10 +43,10 @@ Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-spe
 
 ## ⚡ Quick Start (Automated Setup)
 
-1. Download **`Install-Touhou-Fix.ps1`** and place it inside your Touhou game folder (TH06 through TH19).
+1. Download **`Install-Touhou-Fix.ps1`** and place it inside your Touhou game folder (TH06 through TH19 / TH15.5).
 2. Right-click **`Install-Touhou-Fix.ps1`** -> **Run with PowerShell** (or run `powershell -ExecutionPolicy Bypass -File .\Install-Touhou-Fix.ps1`).
 3. The script automatically:
-   - Auto-detects which Touhou game(s) are present in the folder (`th06` – `th19`)
+   - Auto-detects which Touhou game(s) are present in the folder (`th06` – `th19` / `th155`)
    - Creates standardized executables (`th06.exe` – `th19.exe`)
    - **Downloads and installs the THCRAP English translation patches for each game**
    - Downloads & installs Crosire `d3d8to9` wrapper (`d3d8.dll`) for legacy D3D8 games
