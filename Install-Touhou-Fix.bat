@@ -2,7 +2,7 @@
 @echo off
 title Touhou Complete Series Universal Setup
 cd /d "%~dp0"
-powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-Expression $([System.IO.File]::ReadAllText('%~f0'))"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$GamePath='%~dp0'; $code = [System.IO.File]::ReadAllText('%~f0'); Invoke-Expression $code"
 echo.
 echo ========================================================
 echo  Setup complete! Press any key to exit.
@@ -13,7 +13,7 @@ exit /b
 
 [CmdletBinding()]
 param (
-    [string]$GamePath = (Get-Location).Path,
+    [string]$GamePath,
     [switch]$ForceReinstall
 )
 
@@ -21,10 +21,10 @@ $ErrorActionPreference = "Stop"
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 # Resolve absolute GamePath cleanly
-if ([string]::IsNullOrWhiteSpace($GamePath) -or -not (Test-Path $GamePath)) {
+if (-not $GamePath -or [string]::IsNullOrWhiteSpace($GamePath) -or -not (Test-Path -Path $GamePath -ErrorAction SilentlyContinue)) {
     $GamePath = (Get-Location).Path
 }
-$GamePath = (Get-Item $GamePath).FullName
+$GamePath = (Get-Item -Path $GamePath).FullName
 
 Write-Host "========================================================" -ForegroundColor Cyan
 Write-Host " Touhou Complete Series: Universal Windows Setup" -ForegroundColor Cyan
@@ -68,8 +68,8 @@ $claimedExes = @()
 foreach ($entry in $gameDb) {
     $id = $entry.Id
     $targetPath = Join-Path $GamePath "$id.exe"
-    if (Test-Path $targetPath) {
-        $exeItem = Get-Item $targetPath
+    if (Test-Path -Path $targetPath -ErrorAction SilentlyContinue) {
+        $exeItem = Get-Item -Path $targetPath
         $detectedGames += $id
         $detectedGameMap[$id] = $entry.Name
         $claimedExes += $exeItem.FullName
@@ -120,7 +120,7 @@ $needsD3d8 = ($detectedGames -contains "th06") -or ($detectedGames -contains "th
 
 if ($needsD3d8) {
     $targetD3d8 = Join-Path $GamePath "d3d8.dll"
-    if (-not (Test-Path $targetD3d8) -or $ForceReinstall) {
+    if (-not (Test-Path -Path $targetD3d8 -ErrorAction SilentlyContinue) -or $ForceReinstall) {
         Write-Host "[+] Installing Crosire d3d8to9 (DirectX 8 to DirectX 9/12 wrapper)..." -ForegroundColor Green
         $d3d8Url = "https://github.com/crosire/d3d8to9/releases/latest/download/d3d8.dll"
         try {
@@ -136,16 +136,16 @@ if ($needsD3d8) {
 
 # 3. Download and Install d3dx9_43.dll
 $targetD3dx9 = Join-Path $GamePath "d3dx9_43.dll"
-if (-not (Test-Path $targetD3dx9) -or $ForceReinstall) {
+if (-not (Test-Path -Path $targetD3dx9 -ErrorAction SilentlyContinue) -or $ForceReinstall) {
     Write-Host "[+] Installing Microsoft DirectX 9 Extensions (d3dx9_43.dll)..." -ForegroundColor Green
     
     $sysDll = "$env:SystemRoot\SysWOW64\d3dx9_43.dll"
     $knownLocalDll = "C:\Users\royem\Games\Touhou 6 - The Embodiment of Scarlet Devil\d3dx9_43.dll"
 
-    if (Test-Path $sysDll) {
+    if (Test-Path -Path $sysDll -ErrorAction SilentlyContinue) {
         Copy-Item $sysDll $targetD3dx9 -Force
         Write-Host "    [OK] d3dx9_43.dll copied from Windows SysWOW64 system directory." -ForegroundColor Gray
-    } elseif (Test-Path $knownLocalDll) {
+    } elseif (Test-Path -Path $knownLocalDll -ErrorAction SilentlyContinue) {
         Copy-Item $knownLocalDll $targetD3dx9 -Force
         Write-Host "    [OK] d3dx9_43.dll copied from local Touhou 6 directory." -ForegroundColor Gray
     } else {
@@ -158,11 +158,12 @@ if (-not (Test-Path $targetD3dx9) -or $ForceReinstall) {
             Invoke-WebRequest -Uri $dxRedistUrl -OutFile $tempExe -UseBasicParsing
             New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
             
-            $destPath = (Get-Item $tempDir).FullName
+            $destPath = (Get-Item -Path $tempDir).FullName
             Start-Process -FilePath $tempExe -ArgumentList "/T:`"$destPath`" /Q" -Wait
             
-            if (Test-Path (Join-Path $tempDir "Jun2010_d3dx9_43_x86.cab")) {
-                expand.exe (Join-Path $tempDir "Jun2010_d3dx9_43_x86.cab") -F:d3dx9_43.dll "$GamePath" | Out-Null
+            $cabFile = Join-Path $tempDir "Jun2010_d3dx9_43_x86.cab"
+            if (Test-Path -Path $cabFile -ErrorAction SilentlyContinue) {
+                Start-Process -FilePath "expand.exe" -ArgumentList "`"$cabFile`" -F:d3dx9_43.dll `"$GamePath`"" -Wait -WindowStyle Hidden
                 Write-Host "    [OK] d3dx9_43.dll extracted and installed successfully." -ForegroundColor Gray
             }
         } catch {
@@ -306,7 +307,7 @@ $cfgBytes = [byte[]](
 foreach ($g in $detectedGames) {
     if ($g -in @("th06", "th07", "th08")) {
         $cfgPath = Join-Path $GamePath "$g.cfg"
-        if (-not (Test-Path $cfgPath) -or $ForceReinstall) {
+        if (-not (Test-Path -Path $cfgPath -ErrorAction SilentlyContinue) -or $ForceReinstall) {
             [System.IO.File]::WriteAllBytes($cfgPath, $cfgBytes)
         }
     }
@@ -317,14 +318,14 @@ if ($detectedGames -contains "th06") {
     $sjisBytes = [byte[]](0x96, 0x7B, 0x96, 0xA0, 0x8D, 0x8D, 0x92, 0xB9, 0x8B, 0xAE, 0x2E, 0x63, 0x66, 0x67)
     $ansiName = [System.Text.Encoding]::GetEncoding(1252).GetString($sjisBytes)
     $ansiPath = Join-Path $GamePath $ansiName
-    if (-not (Test-Path $ansiPath) -or $ForceReinstall) {
+    if (-not (Test-Path -Path $ansiPath -ErrorAction SilentlyContinue) -or $ForceReinstall) {
         [System.IO.File]::WriteAllBytes($ansiPath, $cfgBytes)
     }
 }
 
 # vpatch.ini
 $vpatchPath = Join-Path $GamePath "vpatch.ini"
-if (-not (Test-Path $vpatchPath) -or $ForceReinstall) {
+if (-not (Test-Path -Path $vpatchPath -ErrorAction SilentlyContinue) -or $ForceReinstall) {
     $vpatchIni = @'
 [Window]
 AskWindowMode = 0
