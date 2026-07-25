@@ -58,28 +58,47 @@ $allExes = Get-ChildItem -Path $GamePath -Filter "*.exe" -ErrorAction SilentlyCo
 
 $detectedGames = @()
 $detectedGameMap = @{}
+$claimedExes = @()
 
+# First Pass: Exact matches by id.exe
 foreach ($entry in $gameDb) {
     $id = $entry.Id
-    $name = $entry.Name
-    
-    $matchedExe = $null
     if (Test-Path "$GamePath\$id.exe") {
-        $matchedExe = Get-Item "$GamePath\$id.exe"
-    } else {
-        $matchedExe = $allExes | Where-Object { $_.Name -like $entry.Pattern } | Select-Object -First 1
-        if (-not $matchedExe) {
-            $matchedExe = $allExes | Where-Object { $_.Name -notlike "custom*" -and $_.Name -notlike "vpatch*" -and $_.Length -ge $entry.MinSize -and $_.Length -le $entry.MaxSize } | Select-Object -First 1
-        }
-    }
-    
-    if ($matchedExe) {
-        if (-not (Test-Path "$GamePath\$id.exe")) {
-            Copy-Item $matchedExe.FullName "$GamePath\$id.exe" -Force
-        }
+        $exeItem = Get-Item "$GamePath\$id.exe"
         $detectedGames += $id
-        $detectedGameMap[$id] = $name
-        Write-Host "[+] Detected $name ($id)" -ForegroundColor Green
+        $detectedGameMap[$id] = $entry.Name
+        $claimedExes += $exeItem.FullName
+        Write-Host "[+] Detected $($entry.Name) ($id)" -ForegroundColor Green
+    }
+}
+
+# Second Pass: Pattern match or size fallback for un-claimed EXEs
+if ($detectedGames.Count -eq 0) {
+    foreach ($entry in $gameDb) {
+        $id = $entry.Id
+        if ($detectedGames -contains $id) { continue }
+        
+        $matchedExe = $allExes | Where-Object { $_.FullName -notin $claimedExes -and $_.Name -like $entry.Pattern } | Select-Object -First 1
+        if (-not $matchedExe) {
+            $matchedExe = $allExes | Where-Object { 
+                $_.FullName -notin $claimedExes -and 
+                $_.Name -notlike "custom*" -and 
+                $_.Name -notlike "vpatch*" -and 
+                $_.Name -notlike "th[0-1][0-9]*" -and 
+                $_.Length -ge $entry.MinSize -and 
+                $_.Length -le $entry.MaxSize 
+            } | Select-Object -First 1
+        }
+        
+        if ($matchedExe) {
+            if (-not (Test-Path "$GamePath\$id.exe")) {
+                Copy-Item $matchedExe.FullName "$GamePath\$id.exe" -Force
+            }
+            $detectedGames += $id
+            $detectedGameMap[$id] = $entry.Name
+            $claimedExes += $matchedExe.FullName
+            Write-Host "[+] Detected $($entry.Name) ($id)" -ForegroundColor Green
+        }
     }
 }
 
