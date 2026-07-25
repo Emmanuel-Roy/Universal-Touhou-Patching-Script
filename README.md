@@ -14,30 +14,30 @@ Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-spe
 
 ## 🎮 Supported Games (Touhou 06 – Touhou 19 & 15.5)
 
-| Game ID | Full Title |
-|---|---|
-| **th06** | Touhou 06: The Embodiment of Scarlet Devil |
-| **th07** | Touhou 07: Perfect Cherry Blossom |
-| **th08** | Touhou 08: Imperishable Night |
-| **th09** | Touhou 09: Phantasmagoria of Flower View |
-| **th095** | Touhou 09.5: Shoot the Bullet |
-| **th10** | Touhou 10: Mountain of Faith |
-| **th11** | Touhou 11: Subterranean Animism |
-| **th12** | Touhou 12: Undefined Fantastic Object |
-| **th123** | Touhou 12.3: Hisoutensoku |
-| **th125** | Touhou 12.5: Double Spoiler |
-| **th128** | Touhou 12.8: Fairy Wars |
-| **th13** | Touhou 13: Ten Desires |
-| **th14** | Touhou 14: Double Dealing Character |
-| **th143** | Touhou 14.3: Impossible Spell Card |
-| **th15** | Touhou 15: Legacy of Lunatic Kingdom |
-| **th155** | Touhou 15.5: Antinomy of Common Flowers |
-| **th16** | Touhou 16: Hidden Star in Four Seasons |
-| **th165** | Touhou 16.5: Secret Sealing Auto-dap |
-| **th17** | Touhou 17: Wily Beast and Weakest Creature |
-| **th18** | Touhou 18: Unconnected Marketeers |
-| **th185** | Touhou 18.5: 100th Black Market |
-| **th19** | Touhou 19: Unfinished Dream of All Living Ghost |
+| Game ID | Full Title | x86 / x64 Support | ARM64 Support |
+|---|---|---|---|
+| **th06** | Touhou 06: The Embodiment of Scarlet Devil | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th07** | Touhou 07: Perfect Cherry Blossom | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th08** | Touhou 08: Imperishable Night | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th09** | Touhou 09: Phantasmagoria of Flower View | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th095** | Touhou 09.5: Shoot the Bullet | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th10** | Touhou 10: Mountain of Faith | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th11** | Touhou 11: Subterranean Animism | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th12** | Touhou 12: Undefined Fantastic Object | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th123** | Touhou 12.3: Hisoutensoku | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th125** | Touhou 12.5: Double Spoiler | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th128** | Touhou 12.8: Fairy Wars | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th13** | Touhou 13: Ten Desires | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th14** | Touhou 14: Double Dealing Character | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th143** | Touhou 14.3: Impossible Spell Card | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th15** | Touhou 15: Legacy of Lunatic Kingdom | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th155** | Touhou 15.5: Antinomy of Common Flowers | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th16** | Touhou 16: Hidden Star in Four Seasons | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th165** | Touhou 16.5: Secret Sealing Auto-dap | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th17** | Touhou 17: Wily Beast and Weakest Creature | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th18** | Touhou 18: Unconnected Marketeers | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th185** | Touhou 18.5: 100th Black Market | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th19** | Touhou 19: Unfinished Dream of All Living Ghost | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
 
 ---
 
