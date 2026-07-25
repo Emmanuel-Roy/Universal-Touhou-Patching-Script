@@ -15,12 +15,18 @@
 
 [CmdletBinding()]
 param (
-    [string]$GamePath = $PSScriptRoot,
+    [string]$GamePath = (Get-Location).Path,
     [switch]$ForceReinstall
 )
 
 $ErrorActionPreference = "Stop"
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+# Resolve absolute GamePath cleanly
+if ([string]::IsNullOrWhiteSpace($GamePath) -or -not (Test-Path $GamePath)) {
+    $GamePath = (Get-Location).Path
+}
+$GamePath = (Get-Item $GamePath).FullName
 
 Write-Host "========================================================" -ForegroundColor Cyan
 Write-Host " Touhou Complete Series: Universal Windows Setup" -ForegroundColor Cyan
@@ -63,8 +69,9 @@ $claimedExes = @()
 # First Pass: Exact matches by id.exe
 foreach ($entry in $gameDb) {
     $id = $entry.Id
-    if (Test-Path "$GamePath\$id.exe") {
-        $exeItem = Get-Item "$GamePath\$id.exe"
+    $targetPath = Join-Path $GamePath "$id.exe"
+    if (Test-Path $targetPath) {
+        $exeItem = Get-Item $targetPath
         $detectedGames += $id
         $detectedGameMap[$id] = $entry.Name
         $claimedExes += $exeItem.FullName
@@ -91,8 +98,9 @@ if ($detectedGames.Count -eq 0) {
         }
         
         if ($matchedExe) {
-            if (-not (Test-Path "$GamePath\$id.exe")) {
-                Copy-Item $matchedExe.FullName "$GamePath\$id.exe" -Force
+            $targetPath = Join-Path $GamePath "$id.exe"
+            if ($matchedExe.FullName -ine $targetPath) {
+                Copy-Item $matchedExe.FullName $targetPath -Force
             }
             $detectedGames += $id
             $detectedGameMap[$id] = $entry.Name
@@ -113,11 +121,12 @@ if ($detectedGames.Count -eq 0) {
 $needsD3d8 = ($detectedGames -contains "th06") -or ($detectedGames -contains "th07") -or ($detectedGames -contains "th08")
 
 if ($needsD3d8) {
-    if (-not (Test-Path "$GamePath\d3d8.dll") -or $ForceReinstall) {
+    $targetD3d8 = Join-Path $GamePath "d3d8.dll"
+    if (-not (Test-Path $targetD3d8) -or $ForceReinstall) {
         Write-Host "[+] Installing Crosire d3d8to9 (DirectX 8 to DirectX 9/12 wrapper)..." -ForegroundColor Green
         $d3d8Url = "https://github.com/crosire/d3d8to9/releases/latest/download/d3d8.dll"
         try {
-            Invoke-WebRequest -Uri $d3d8Url -OutFile "$GamePath\d3d8.dll" -UseBasicParsing
+            Invoke-WebRequest -Uri $d3d8Url -OutFile $targetD3d8 -UseBasicParsing
             Write-Host "    [OK] d3d8.dll installed successfully." -ForegroundColor Gray
         } catch {
             Write-Host "[!] Warning: Failed to download d3d8.dll - using local fallback if available." -ForegroundColor Yellow
@@ -128,20 +137,21 @@ if ($needsD3d8) {
 }
 
 # 3. Download and Install d3dx9_43.dll
-if (-not (Test-Path "$GamePath\d3dx9_43.dll") -or $ForceReinstall) {
+$targetD3dx9 = Join-Path $GamePath "d3dx9_43.dll"
+if (-not (Test-Path $targetD3dx9) -or $ForceReinstall) {
     Write-Host "[+] Installing Microsoft DirectX 9 Extensions (d3dx9_43.dll)..." -ForegroundColor Green
     
     $sysDll = "$env:SystemRoot\SysWOW64\d3dx9_43.dll"
     if (Test-Path $sysDll) {
-        Copy-Item $sysDll "$GamePath\d3dx9_43.dll" -Force
+        Copy-Item $sysDll $targetD3dx9 -Force
         Write-Host "    [OK] d3dx9_43.dll copied from Windows SysWOW64 system directory." -ForegroundColor Gray
-    } elseif (Test-Path "$PSScriptRoot\d3dx9_43.dll") {
-        Copy-Item "$PSScriptRoot\d3dx9_43.dll" "$GamePath\d3dx9_43.dll" -Force
+    } elseif (Test-Path (Join-Path $PSScriptRoot "d3dx9_43.dll")) {
+        Copy-Item (Join-Path $PSScriptRoot "d3dx9_43.dll") $targetD3dx9 -Force
         Write-Host "    [OK] d3dx9_43.dll copied from local installer folder." -ForegroundColor Gray
     } else {
         $dxRedistUrl = "https://download.microsoft.com/download/8/4/a/84a35bf1-dafe-4ae8-82af-ad2ae20b6b14/directx_Jun2010_redist.exe"
-        $tempExe = "$GamePath\dx_redist_temp.exe"
-        $tempDir = "$GamePath\dx_extract_temp"
+        $tempExe = Join-Path $GamePath "dx_redist_temp.exe"
+        $tempDir = Join-Path $GamePath "dx_extract_temp"
 
         try {
             Invoke-WebRequest -Uri $dxRedistUrl -OutFile $tempExe -UseBasicParsing
@@ -150,8 +160,8 @@ if (-not (Test-Path "$GamePath\d3dx9_43.dll") -or $ForceReinstall) {
             $destPath = (Get-Item $tempDir).FullName
             Start-Process -FilePath $tempExe -ArgumentList "/T:`"$destPath`" /Q" -Wait
             
-            if (Test-Path "$tempDir\Jun2010_d3dx9_43_x86.cab") {
-                expand.exe "$tempDir\Jun2010_d3dx9_43_x86.cab" -F:d3dx9_43.dll "$GamePath" | Out-Null
+            if (Test-Path (Join-Path $tempDir "Jun2010_d3dx9_43_x86.cab")) {
+                expand.exe (Join-Path $tempDir "Jun2010_d3dx9_43_x86.cab") -F:d3dx9_43.dll "$GamePath" | Out-Null
                 Write-Host "    [OK] d3dx9_43.dll extracted and installed successfully." -ForegroundColor Gray
             }
         } catch {
@@ -169,32 +179,32 @@ if (-not (Test-Path "$GamePath\d3dx9_43.dll") -or $ForceReinstall) {
 }
 
 # 4. Automatically Install THCRAP English Translation Patch Stack & Repo Definitions
-$thcrapInstalled = (Test-Path "$GamePath\thcrap\config\thpatch-en.js") -and (Test-Path "$GamePath\thcrap\repos\nmlgc\repo.js")
+$thcrapInstalled = (Test-Path (Join-Path $GamePath "thcrap\config\thpatch-en.js")) -and (Test-Path (Join-Path $GamePath "thcrap\repos\nmlgc\repo.js"))
 
 if (-not $thcrapInstalled -or $ForceReinstall) {
     Write-Host "[+] Automatically downloading and installing THCRAP English translation patches..." -ForegroundColor Green
     $thcrapZipUrl = "https://github.com/thpatch/thcrap/releases/latest/download/thcrap.zip"
-    $thcrapZip = "$GamePath\thcrap_temp.zip"
+    $thcrapZip = Join-Path $GamePath "thcrap_temp.zip"
 
     try {
-        if (-not (Test-Path "$GamePath\thcrap\bin\thcrap_loader.exe") -or $ForceReinstall) {
+        if (-not (Test-Path (Join-Path $GamePath "thcrap\bin\thcrap_loader.exe")) -or $ForceReinstall) {
             Invoke-WebRequest -Uri $thcrapZipUrl -OutFile $thcrapZip -UseBasicParsing
-            Expand-Archive -Path $thcrapZip -DestinationPath "$GamePath\thcrap" -Force
+            Expand-Archive -Path $thcrapZip -DestinationPath (Join-Path $GamePath "thcrap") -Force
             Remove-Item $thcrapZip -Force -ErrorAction SilentlyContinue
         }
         
         # Configure thcrap/config/games.js
-        New-Item -ItemType Directory -Path "$GamePath\thcrap\config" -Force | Out-Null
+        New-Item -ItemType Directory -Path (Join-Path $GamePath "thcrap\config") -Force | Out-Null
         $gamesJsObj = @{}
         foreach ($g in $detectedGames) {
             $gamesJsObj[$g] = "../$g.exe"
             $gamesJsObj["${g}_custom"] = "../custom.exe"
         }
         $gamesJsJson = $gamesJsObj | ConvertTo-Json
-        Set-Content -Path "$GamePath\thcrap\config\games.js" -Value $gamesJsJson -Encoding UTF8
+        Set-Content -Path (Join-Path $GamePath "thcrap\config\games.js") -Value $gamesJsJson -Encoding UTF8
 
         # Configure thcrap/repos/nmlgc/repo.js
-        New-Item -ItemType Directory -Path "$GamePath\thcrap\repos\nmlgc" -Force | Out-Null
+        New-Item -ItemType Directory -Path (Join-Path $GamePath "thcrap\repos\nmlgc") -Force | Out-Null
         $nmlgcRepoJs = @'
 {
     "id": "nmlgc",
@@ -211,10 +221,10 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
     }
 }
 '@
-        Set-Content -Path "$GamePath\thcrap\repos\nmlgc\repo.js" -Value $nmlgcRepoJs -Encoding UTF8
+        Set-Content -Path (Join-Path $GamePath "thcrap\repos\nmlgc\repo.js") -Value $nmlgcRepoJs -Encoding UTF8
 
         # Configure thcrap/repos/thpatch/repo.js
-        New-Item -ItemType Directory -Path "$GamePath\thcrap\repos\thpatch" -Force | Out-Null
+        New-Item -ItemType Directory -Path (Join-Path $GamePath "thcrap\repos\thpatch") -Force | Out-Null
         $thpatchRepoJs = @'
 {
     "id": "thpatch",
@@ -229,7 +239,7 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
     }
 }
 '@
-        Set-Content -Path "$GamePath\thcrap\repos\thpatch\repo.js" -Value $thpatchRepoJs -Encoding UTF8
+        Set-Content -Path (Join-Path $GamePath "thcrap\repos\thpatch\repo.js") -Value $thpatchRepoJs -Encoding UTF8
 
         # Configure thcrap/config/thpatch-en.js
         $thpatchEnJs = @'
@@ -244,7 +254,7 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
   ]
 }
 '@
-        Set-Content -Path "$GamePath\thcrap\config\thpatch-en.js" -Value $thpatchEnJs -Encoding UTF8
+        Set-Content -Path (Join-Path $GamePath "thcrap\config\thpatch-en.js") -Value $thpatchEnJs -Encoding UTF8
         Write-Host "    [OK] THCRAP engine and English patch repository metadata configured." -ForegroundColor Gray
     } catch {
         Write-Host "[!] Warning: THCRAP auto-download skipped or failed." -ForegroundColor Yellow
@@ -255,8 +265,8 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
 
 # Create double-clickable launchers for English patches if missing
 foreach ($g in $detectedGames) {
-    $batFile = "$GamePath\$g (thpatch-en).cmd"
-    if (-not (Test-Path $batFile) -and -not (Test-Path "$GamePath\$g (thpatch-en).exe")) {
+    $batFile = Join-Path $GamePath "$g (thpatch-en).cmd"
+    if (-not (Test-Path $batFile) -and -not (Test-Path (Join-Path $GamePath "$g (thpatch-en).exe"))) {
         $batCmd = "@echo off`r`nstart `"`" `"%~dp0thcrap\bin\thcrap_loader.exe`" thpatch-en.js $g`r`n"
         Set-Content -Path $batFile -Value $batCmd -Encoding ASCII
     }
@@ -275,8 +285,9 @@ $cfgBytes = [byte[]](
 
 foreach ($g in $detectedGames) {
     if ($g -in @("th06", "th07", "th08")) {
-        if (-not (Test-Path "$GamePath\$g.cfg") -or $ForceReinstall) {
-            [System.IO.File]::WriteAllBytes("$GamePath\$g.cfg", $cfgBytes)
+        $cfgPath = Join-Path $GamePath "$g.cfg"
+        if (-not (Test-Path $cfgPath) -or $ForceReinstall) {
+            [System.IO.File]::WriteAllBytes($cfgPath, $cfgBytes)
         }
     }
 }
@@ -285,13 +296,15 @@ foreach ($g in $detectedGames) {
 if ($detectedGames -contains "th06") {
     $sjisBytes = [byte[]](0x96, 0x7B, 0x96, 0xA0, 0x8D, 0x8D, 0x92, 0xB9, 0x8B, 0xAE, 0x2E, 0x63, 0x66, 0x67)
     $ansiName = [System.Text.Encoding]::GetEncoding(1252).GetString($sjisBytes)
-    if (-not (Test-Path "$GamePath\$ansiName") -or $ForceReinstall) {
-        [System.IO.File]::WriteAllBytes("$GamePath\$ansiName", $cfgBytes)
+    $ansiPath = Join-Path $GamePath $ansiName
+    if (-not (Test-Path $ansiPath) -or $ForceReinstall) {
+        [System.IO.File]::WriteAllBytes($ansiPath, $cfgBytes)
     }
 }
 
 # vpatch.ini
-if (-not (Test-Path "$GamePath\vpatch.ini") -or $ForceReinstall) {
+$vpatchPath = Join-Path $GamePath "vpatch.ini"
+if (-not (Test-Path $vpatchPath) -or $ForceReinstall) {
     $vpatchIni = @'
 [Window]
 AskWindowMode = 0
@@ -316,7 +329,7 @@ AlwaysBlt = 0
 BugFixCherry = 1
 BugFixTh10Power3 = 1
 '@
-    Set-Content -Path "$GamePath\vpatch.ini" -Value $vpatchIni -Encoding UTF8
+    Set-Content -Path $vpatchPath -Value $vpatchIni -Encoding UTF8
 }
 
 Write-Host "    [OK] Configurations verified." -ForegroundColor Gray
