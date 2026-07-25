@@ -140,14 +140,10 @@ if (-not (Test-Path -Path $targetD3dx9 -ErrorAction SilentlyContinue) -or $Force
     Write-Host "[+] Installing Microsoft DirectX 9 Extensions (d3dx9_43.dll)..." -ForegroundColor Green
     
     $sysDll = "$env:SystemRoot\SysWOW64\d3dx9_43.dll"
-    $knownLocalDll = "C:\Users\royem\Games\Touhou 6 - The Embodiment of Scarlet Devil\d3dx9_43.dll"
 
     if (Test-Path -Path $sysDll -ErrorAction SilentlyContinue) {
         Copy-Item $sysDll $targetD3dx9 -Force
         Write-Host "    [OK] d3dx9_43.dll copied from Windows SysWOW64 system directory." -ForegroundColor Gray
-    } elseif (Test-Path -Path $knownLocalDll -ErrorAction SilentlyContinue) {
-        Copy-Item $knownLocalDll $targetD3dx9 -Force
-        Write-Host "    [OK] d3dx9_43.dll copied from local Touhou 6 directory." -ForegroundColor Gray
     } else {
         Write-Host "    [...] Downloading Microsoft DirectX 9 package (~95MB)... Please wait..." -ForegroundColor Yellow
         $dxRedistUrl = "https://download.microsoft.com/download/8/4/a/84a35bf1-dafe-4ae8-82af-ad2ae20b6b14/directx_Jun2010_redist.exe"
