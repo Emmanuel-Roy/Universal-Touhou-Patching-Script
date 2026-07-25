@@ -199,8 +199,19 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
             Remove-Item $thcrapZip -Force -ErrorAction SilentlyContinue
         }
         
-        # Configure thcrap/config/games.js
+        # Configure thcrap/config/config.js (Enable background updates)
         New-Item -ItemType Directory -Path (Join-Path $GamePath "thcrap\config") -Force | Out-Null
+        $configJs = @'
+{
+  "background_updates": true,
+  "time_between_updates": 5,
+  "update_at_exit": false,
+  "update_others": true
+}
+'@
+        Set-Content -Path (Join-Path $GamePath "thcrap\config\config.js") -Value $configJs -Encoding UTF8
+
+        # Configure thcrap/config/games.js
         $gamesJsObj = @{}
         foreach ($g in $detectedGames) {
             $gamesJsObj[$g] = "../$g.exe"
@@ -217,7 +228,7 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
     "title": "nmlgc's patch repository",
     "contact": "network@thpatch.net",
     "servers": [
-        "https://srv.thpatch.net/nmlgc/",
+        "https://srv.thpatch.net/",
         "https://mirrors.thpatch.net/nmlgc/"
     ],
     "patches": {
@@ -238,7 +249,7 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
     "contact": "network@thpatch.net",
     "servers": [
         "https://srv.thpatch.net/",
-        "https://mirrors.thpatch.net/"
+        "https://mirrors.thpatch.net/nmlgc/"
     ],
     "patches": {
         "lang_en": "English language pack"
@@ -261,6 +272,13 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
 }
 '@
         Set-Content -Path (Join-Path $GamePath "thcrap\config\thpatch-en.js") -Value $thpatchEnJs -Encoding UTF8
+
+        # Pre-download repository files.js index to prevent missing patch warnings on launch
+        try {
+            Invoke-WebRequest -Uri "https://srv.thpatch.net/base_tsa/files.js" -OutFile (Join-Path $GamePath "thcrap\repos\nmlgc\base_tsa\files.js") -UseBasicParsing -ErrorAction SilentlyContinue
+            Invoke-WebRequest -Uri "https://srv.thpatch.net/lang_en/files.js" -OutFile (Join-Path $GamePath "thcrap\repos\thpatch\lang_en\files.js") -UseBasicParsing -ErrorAction SilentlyContinue
+        } catch {}
+
         Write-Host "    [OK] THCRAP engine and English patch repository metadata configured." -ForegroundColor Gray
     } catch {
         Write-Host "[!] Warning: THCRAP auto-download skipped or failed." -ForegroundColor Yellow
