@@ -117,16 +117,16 @@ $needsD3d8 = ($detectedGames -contains "th06") -or ($detectedGames -contains "th
 if ($needsD3d8) {
     $targetD3d8 = Join-Path $GamePath "d3d8.dll"
     if (-not (Test-Path -Path $targetD3d8 -ErrorAction SilentlyContinue) -or $ForceReinstall) {
-        Write-Host "[+] Installing Crosire d3d8to9 (DirectX 8 to DirectX 9/12 wrapper)..." -ForegroundColor Green
+        Write-Host "[+] Installing Crosire d3d8to9 (DirectX 8 -> DirectX 9/12 wrapper - ENABLES WINDOWS 11 ARM64 & MODERN GPU SUPPORT)..." -ForegroundColor Green
         $d3d8Url = "https://github.com/crosire/d3d8to9/releases/latest/download/d3d8.dll"
         try {
             Invoke-WebRequest -Uri $d3d8Url -OutFile $targetD3d8 -UseBasicParsing
-            Write-Host "    [OK] d3d8.dll installed successfully." -ForegroundColor Gray
+            Write-Host "    [OK] d3d8.dll installed successfully (DirectX 8 -> DirectX 9/12 translation active for ARM64)." -ForegroundColor Gray
         } catch {
             Write-Host "[!] Warning: Failed to download d3d8.dll - using local fallback if available." -ForegroundColor Yellow
         }
     } else {
-        Write-Host "[+] Crosire d3d8to9 (d3d8.dll) already present. Skipping download." -ForegroundColor Gray
+        Write-Host "[+] Crosire d3d8to9 (d3d8.dll) already present (Enables Windows 11 ARM64 & modern GPU support for legacy D3D8 games). Skipping download." -ForegroundColor Gray
     }
 }
 

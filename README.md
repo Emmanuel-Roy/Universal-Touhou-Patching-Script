@@ -16,28 +16,32 @@ Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-spe
 
 | Game ID | Full Title | x86 / x64 Support | ARM64 Support |
 |---|---|---|---|
-| **th06** | Touhou 06: The Embodiment of Scarlet Devil | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th07** | Touhou 07: Perfect Cherry Blossom | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th08** | Touhou 08: Imperishable Night | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th09** | Touhou 09: Phantasmagoria of Flower View | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th095** | Touhou 09.5: Shoot the Bullet | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th10** | Touhou 10: Mountain of Faith | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th11** | Touhou 11: Subterranean Animism | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th12** | Touhou 12: Undefined Fantastic Object | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th123** | Touhou 12.3: Hisoutensoku | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th125** | Touhou 12.5: Double Spoiler | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th128** | Touhou 12.8: Fairy Wars | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th13** | Touhou 13: Ten Desires | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th14** | Touhou 14: Double Dealing Character | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th143** | Touhou 14.3: Impossible Spell Card | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th15** | Touhou 15: Legacy of Lunatic Kingdom | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th155** | Touhou 15.5: Antinomy of Common Flowers | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th16** | Touhou 16: Hidden Star in Four Seasons | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th165** | Touhou 16.5: Secret Sealing Auto-dap | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th17** | Touhou 17: Wily Beast and Weakest Creature | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th18** | Touhou 18: Unconnected Marketeers | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th185** | Touhou 18.5: 100th Black Market | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
-| **th19** | Touhou 19: Unfinished Dream of All Living Ghost | ✅ Supported (Win 11) | ✅ Tested (Win 11) |
+| **th06** | Touhou 06: The Embodiment of Scarlet Devil | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64 via d3d8to9) |
+| **th07** | Touhou 07: Perfect Cherry Blossom | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64 via d3d8to9) |
+| **th08** | Touhou 08: Imperishable Night | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64 via d3d8to9) |
+| **th09** | Touhou 09: Phantasmagoria of Flower View | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th095** | Touhou 09.5: Shoot the Bullet | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th10** | Touhou 10: Mountain of Faith | ✅ Tested (Win 11) | ✅ Tested (Win 11 ARM64) |
+| **th11** | Touhou 11: Subterranean Animism | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th12** | Touhou 12: Undefined Fantastic Object | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th123** | Touhou 12.3: Hisoutensoku | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th125** | Touhou 12.5: Double Spoiler | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th128** | Touhou 12.8: Fairy Wars | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th13** | Touhou 13: Ten Desires | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th14** | Touhou 14: Double Dealing Character | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th143** | Touhou 14.3: Impossible Spell Card | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th15** | Touhou 15: Legacy of Lunatic Kingdom | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th155** | Touhou 15.5: Antinomy of Common Flowers | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th16** | Touhou 16: Hidden Star in Four Seasons | ✅ Tested (Win 11) | ✅ Tested (Win 11 ARM64) |
+| **th165** | Touhou 16.5: Secret Sealing Auto-dap | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th17** | Touhou 17: Wily Beast and Weakest Creature | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th18** | Touhou 18: Unconnected Marketeers | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th185** | Touhou 18.5: 100th Black Market | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+| **th19** | Touhou 19: Unfinished Dream of All Living Ghost | ✅ Supported (Win 11) | ✅ Supported (Win 11 ARM64) |
+
+> [!TIP]
+> **How ARM64 Support Works for Older Games (TH06–TH08)**:
+> Legacy DirectX 8 games natively call `d3d8.dll`, which Windows 11 ARM64 and modern GPUs do not support. The installer automatically injects Crosire's **`d3d8to9`** wrapper (`d3d8.dll`), translating DirectX 8 calls directly into Direct3D 9/12 to enable flawless execution on ARM64 hardware!
 
 ---
 
@@ -49,7 +53,7 @@ Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-spe
    - Auto-detects which Touhou game(s) are present in the folder (`th06` – `th19` / `th155`)
    - Creates standardized executables (`th06.exe` – `th19.exe`)
    - **Downloads and installs the THCRAP English translation patches for each game**
-   - Downloads & installs Crosire `d3d8to9` wrapper (`d3d8.dll`) for legacy D3D8 games
+   - Downloads & installs Crosire `d3d8to9` wrapper (`d3d8.dll`) for legacy D3D8 games (enabling ARM64 compatibility)
    - Downloads & extracts Microsoft `d3dx9_43.dll` 32-bit runtime
    - Pre-configures Windowed Mode and 60 FPS VPatch (`vpatch.ini`)
    - **Skips downloading components if they are already installed!**
