@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Universal Automated Installer for Touhou 6, 7, and 8 on Windows 10/11 & ARM64.
+    Universal Automated Installer for Touhou 6, 7, and 8 (x86, x64, and ARM64 Windows 10/11).
 .DESCRIPTION
     Automated one-stop-shop installer for classic Touhou games:
     - Touhou 6: The Embodiment of Scarlet Devil (th06)
@@ -24,7 +24,8 @@ $ErrorActionPreference = "Stop"
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 Write-Host "========================================================" -ForegroundColor Cyan
-Write-Host " Touhou 6, 7 and 8: Universal Windows 10/11/ARM64 Setup" -ForegroundColor Cyan
+Write-Host " Touhou 6, 7 and 8: Universal Modern Windows Setup" -ForegroundColor Cyan
+Write-Host " (Supports x86, x64, and ARM64 Windows 10 and 11)" -ForegroundColor Gray
 Write-Host "========================================================" -ForegroundColor Cyan
 
 # 1. Detect Installed Touhou Games (TH06, TH07, TH08)
