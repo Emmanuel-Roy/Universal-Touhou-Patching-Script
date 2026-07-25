@@ -6,7 +6,7 @@
 
 ---
 
-A single, self-contained batch file (**`Install-Touhou-Fix.bat`**) that **automatically downloads, installs, and configures English translation patches for ALL Touhou Windows games (Touhou 06 through Touhou 20, including Tasofro fighting games)** and gets them running natively on modern **Windows 10 / Windows 11 (x86, x64, and ARM64 PCs)**.
+A single, self-contained batch file (**`Install-Touhou-Fix.bat`**) that **automatically downloads, installs, and configures English translation patches for ALL Touhou Windows games (Touhou 06 through Touhou 20)** and gets them running natively on modern **Windows 10 / Windows 11 (x86, x64, and ARM64 PCs)**.
 
 Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-speed bugs, missing DirectX runtimes, and `thcrap` `"failed to learn d3dx9_43.dll"` warnings in one click.
 
@@ -18,7 +18,6 @@ Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-spe
 |---|---|:---:|:---:|
 | **th06** | Touhou 06: The Embodiment of Scarlet Devil | | |
 | **th07** | Touhou 07: Perfect Cherry Blossom | | |
-| **th075** | Touhou 07.5: Immaterial and Missing Power | | |
 | **th08** | Touhou 08: Imperishable Night | | |
 | **th09** | Touhou 09: Phantasmagoria of Flower View | | |
 | **th095** | Touhou 09.5: Shoot the Bullet | | |
@@ -44,6 +43,8 @@ Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-spe
 | **th185** | Touhou 18.5: 100th Black Market | | |
 | **th19** | Touhou 19: Unfinished Dream of All Living Ghost | | |
 | **th20** | Touhou 20: Latest Release / Fan Game | | |
+
+*(Note: Touhou 7.5 Immaterial and Missing Power is not supported by the THCRAP engine).*
 
 > [!TIP]
 > **How ARM64 Support Works for Older Games (TH06–TH08)**:

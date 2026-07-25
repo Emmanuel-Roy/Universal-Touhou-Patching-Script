@@ -27,11 +27,10 @@ Write-Host " Universal Touhou Patching Script" -ForegroundColor Cyan
 Write-Host " (Supports Touhou 06 through Touhou 20 on x86, x64, ARM64)" -ForegroundColor Gray
 Write-Host "========================================================" -ForegroundColor Cyan
 
-# Define Touhou Game Database using pure ASCII patterns and size ranges
+# Define Touhou Game Database using pure ASCII patterns and size ranges (Note: TH07.5 is excluded as THCRAP does not support TH07.5)
 $gameDb = @(
     @{ Id="th06";  Name="Touhou 06: The Embodiment of Scarlet Devil"; Pattern="*th06*.exe"; MinSize=450KB;  MaxSize=650KB;  Gen=1 },
     @{ Id="th07";  Name="Touhou 07: Perfect Cherry Blossom";         Pattern="*th07*.exe"; MinSize=800KB;  MaxSize=1150KB; Gen=1 },
-    @{ Id="th075"; Name="Touhou 07.5: Immaterial and Missing Power";   Pattern="*th075*.exe"; MinSize=2000KB; MaxSize=4000KB; Gen=2 },
     @{ Id="th08";  Name="Touhou 08: Imperishable Night";            Pattern="*th08*.exe"; MinSize=1200KB; MaxSize=1850KB; Gen=1 },
     @{ Id="th09";  Name="Touhou 09: Phantasmagoria of Flower View";   Pattern="*th09*.exe"; MinSize=1500KB; MaxSize=2500KB; Gen=2 },
     @{ Id="th095"; Name="Touhou 09.5: Shoot the Bullet";             Pattern="*th095*.exe"; MinSize=1500KB; MaxSize=2500KB; Gen=2 },
@@ -137,7 +136,7 @@ if ($needsD3d8) {
 }
 
 # 3. Download and Install d3dx9_43.dll (For THCRAP Font Overlay Hooks on Direct3D 9 games)
-$needsD3dx9 = ($detectedGames | Where-Object { $_ -in @("th06","th07","th075","th08","th09","th095","th10","th105","th11","th12","th123","th125","th128","th13","th14","th143","th15") }).Count -gt 0
+$needsD3dx9 = ($detectedGames | Where-Object { $_ -in @("th06","th07","th08","th09","th095","th10","th105","th11","th12","th123","th125","th128","th13","th14","th143","th15") }).Count -gt 0
 
 if ($needsD3dx9) {
     $targetD3dx9 = Join-Path $GamePath "d3dx9_43.dll"
