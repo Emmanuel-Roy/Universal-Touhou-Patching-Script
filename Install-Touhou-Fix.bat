@@ -2,7 +2,7 @@
 @echo off
 title Touhou Complete Series Universal Setup
 cd /d "%~dp0"
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$GamePath='%~dp0'; $code = [System.IO.File]::ReadAllText('%~f0'); Invoke-Expression $code"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$code = [System.IO.File]::ReadAllText('%~f0'); Invoke-Expression $code"
 echo.
 echo ========================================================
 echo  Setup complete! Press any key to exit.
@@ -13,18 +13,14 @@ exit /b
 
 [CmdletBinding()]
 param (
-    [string]$GamePath,
     [switch]$ForceReinstall
 )
 
 $ErrorActionPreference = "Stop"
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-# Resolve absolute GamePath cleanly
-if (-not $GamePath -or [string]::IsNullOrWhiteSpace($GamePath) -or -not (Test-Path -Path $GamePath -ErrorAction SilentlyContinue)) {
-    $GamePath = (Get-Location).Path
-}
-$GamePath = (Get-Item -Path $GamePath).FullName
+# Game is always installed in current directory where script is run
+$GamePath = (Get-Location).Path
 
 Write-Host "========================================================" -ForegroundColor Cyan
 Write-Host " Touhou Complete Series: Universal Windows Setup" -ForegroundColor Cyan
