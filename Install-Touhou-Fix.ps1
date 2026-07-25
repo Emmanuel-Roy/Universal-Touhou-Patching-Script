@@ -1,17 +1,18 @@
 <#
 .SYNOPSIS
-    Universal Automated Installer for Touhou 6, 7, and 8 (x86, x64, and ARM64 Windows 10/11).
+    Universal Single-Script Automated Installer for Touhou 6, 7, and 8 (x86, x64, and ARM64 Windows 10/11).
 .DESCRIPTION
     Automated one-stop-shop installer for classic Touhou games:
     - Touhou 6: The Embodiment of Scarlet Devil (th06)
     - Touhou 7: Perfect Cherry Blossom (th07)
     - Touhou 8: Imperishable Night (th08)
 
-    Automatically installs:
+    Automatically installs and configures:
     - Crosire d3d8to9 wrapper (DirectX 8 -> DirectX 9/12)
     - Microsoft d3dx9_43.dll 32-bit runtime (fixes thcrap missing DLL error)
     - THCRAP English translation patch engine & multi-game configuration
     - Windowed mode & VPatch 60 FPS resolution configuration
+    - Launcher shortcuts for English, VPatch, Original, and Settings
 #>
 
 [CmdletBinding()]
@@ -233,9 +234,17 @@ Write-Host ""
 Write-Host "========================================================" -ForegroundColor Green
 Write-Host " INSTALLATION COMPLETE!" -ForegroundColor Green
 Write-Host "========================================================" -ForegroundColor Green
-Write-Host " Detected Games Processed: $($detectedGames -join ', ')" -ForegroundColor White
+Write-Host " Detected Games: $($detectedGames -join ', ')" -ForegroundColor White
+Write-Host ""
+Write-Host " AVAILABLE LAUNCH AND PLAY OPTIONS:" -ForegroundColor Cyan
 Write-Host ""
 foreach ($g in $detectedGames) {
-    Write-Host " Launch English $g : thcrap\bin\thcrap_loader.exe thpatch-en.js $g" -ForegroundColor Yellow
+    Write-Host " [$g] Launch Options:" -ForegroundColor White
+    Write-Host "   1. English Patched (thcrap) : double-click '$g (thpatch-en).exe'" -ForegroundColor Yellow
+    Write-Host "                                  or run: thcrap\bin\thcrap_loader.exe thpatch-en.js $g" -ForegroundColor Yellow
+    Write-Host "   2. 60 FPS VPatch            : double-click 'vpatch.exe'" -ForegroundColor Yellow
+    Write-Host "   3. Original Unpatched Game  : double-click '$g.exe'" -ForegroundColor Yellow
+    Write-Host "   4. Settings and Controller  : double-click 'custom.exe'" -ForegroundColor Yellow
+    Write-Host ""
 }
 Write-Host "========================================================" -ForegroundColor Green
