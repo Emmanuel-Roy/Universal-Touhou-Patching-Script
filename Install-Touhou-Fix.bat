@@ -180,7 +180,7 @@ if (-not (Test-Path -Path $targetD3dx9 -ErrorAction SilentlyContinue) -or $Force
     Write-Host "[+] Microsoft DirectX 9 Extensions (d3dx9_43.dll) already present. Skipping download." -ForegroundColor Gray
 }
 
-# 4. Automatically Install THCRAP English Translation Patch Stack & Repo Definitions
+# 4. Automatically Install THCRAP English Translation Patch Stack & Download All Patch Files
 $thcrapInstalled = (Test-Path (Join-Path $GamePath "thcrap\config\thpatch-en.js")) -and (Test-Path (Join-Path $GamePath "thcrap\repos\nmlgc\repo.js"))
 
 if (-not $thcrapInstalled -or $ForceReinstall) {
@@ -270,11 +270,51 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
 '@
         Set-Content -Path (Join-Path $GamePath "thcrap\config\thpatch-en.js") -Value $thpatchEnJs -Encoding UTF8
 
-        # Pre-download repository files.js index to prevent missing patch warnings on launch
-        try {
-            Invoke-WebRequest -Uri "https://srv.thpatch.net/base_tsa/files.js" -OutFile (Join-Path $GamePath "thcrap\repos\nmlgc\base_tsa\files.js") -UseBasicParsing -ErrorAction SilentlyContinue
-            Invoke-WebRequest -Uri "https://srv.thpatch.net/lang_en/files.js" -OutFile (Join-Path $GamePath "thcrap\repos\thpatch\lang_en\files.js") -UseBasicParsing -ErrorAction SilentlyContinue
-        } catch {}
+        # Pre-download all patch files for detected games
+        foreach ($g in $detectedGames) {
+            $repos = @(
+                @{ Name="base_tsa";           BaseUrls=@("https://mirrors.thpatch.net/nmlgc/base_tsa/", "https://srv.thpatch.net/base_tsa/");           LocalDir=(Join-Path $GamePath "thcrap\repos\nmlgc\base_tsa") },
+                @{ Name="script_latin";       BaseUrls=@("https://mirrors.thpatch.net/nmlgc/script_latin/", "https://srv.thpatch.net/script_latin/");       LocalDir=(Join-Path $GamePath "thcrap\repos\nmlgc\script_latin") },
+                @{ Name="western_name_order"; BaseUrls=@("https://mirrors.thpatch.net/nmlgc/western_name_order/", "https://srv.thpatch.net/western_name_order/"); LocalDir=(Join-Path $GamePath "thcrap\repos\nmlgc\western_name_order") },
+                @{ Name="lang_en";            BaseUrls=@("https://srv.thpatch.net/lang_en/", "https://mirrors.thpatch.net/nmlgc/lang_en/");             LocalDir=(Join-Path $GamePath "thcrap\repos\thpatch\lang_en") }
+            )
+
+            foreach ($repo in $repos) {
+                New-Item -ItemType Directory -Path $repo.LocalDir -Force | Out-Null
+                $raw = $null
+                $selectedBaseUrl = $null
+
+                foreach ($baseUrl in $repo.BaseUrls) {
+                    try {
+                        $raw = (Invoke-WebRequest -Uri ($baseUrl + "files.js") -UseBasicParsing -ErrorAction Stop).Content
+                        if ($raw) {
+                            $selectedBaseUrl = $baseUrl
+                            Set-Content -Path (Join-Path $repo.LocalDir "files.js") -Value $raw -Encoding UTF8
+                            break
+                        }
+                    } catch {}
+                }
+
+                if ($raw -and $selectedBaseUrl) {
+                    $matches = [regex]::Matches($raw, '"(' + $g + '[^"]*)"')
+                    $fileKeys = $matches | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique
+
+                    if ($fileKeys.Count -gt 0) {
+                        Write-Host "    [...] Downloading $($fileKeys.Count) translation files for $g ($($repo.Name))..." -ForegroundColor Yellow
+                        foreach ($relPath in $fileKeys) {
+                            $destFile = Join-Path $repo.LocalDir $relPath
+                            if (-not (Test-Path -Path $destFile -ErrorAction SilentlyContinue)) {
+                                $parentDir = Split-Path $destFile -Parent
+                                if (-not (Test-Path -Path $parentDir -ErrorAction SilentlyContinue)) { New-Item -ItemType Directory -Path $parentDir -Force | Out-Null }
+                                try {
+                                    Invoke-WebRequest -Uri ($selectedBaseUrl + $relPath) -OutFile $destFile -UseBasicParsing -ErrorAction SilentlyContinue
+                                } catch {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         Write-Host "    [OK] THCRAP engine and English patch repository metadata configured." -ForegroundColor Gray
     } catch {
@@ -287,7 +327,7 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
 # Create double-clickable launchers for English patches if missing
 foreach ($g in $detectedGames) {
     $batFile = Join-Path $GamePath "$g (thpatch-en).cmd"
-    if (-not (Test-Path $batFile) -and -not (Test-Path (Join-Path $GamePath "$g (thpatch-en).exe"))) {
+    if (-not (Test-Path -Path $batFile -ErrorAction SilentlyContinue) -and -not (Test-Path -Path (Join-Path $GamePath "$g (thpatch-en).exe") -ErrorAction SilentlyContinue)) {
         $batCmd = "@echo off`r`nstart `"`" `"%~dp0thcrap\bin\thcrap_loader.exe`" thpatch-en.js $g`r`n"
         Set-Content -Path $batFile -Value $batCmd -Encoding ASCII
     }
