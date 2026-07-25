@@ -24,33 +24,39 @@ $GamePath = (Get-Location).Path
 
 Write-Host "========================================================" -ForegroundColor Cyan
 Write-Host " Universal Touhou Patching Script" -ForegroundColor Cyan
-Write-Host " (Supports Touhou 06 through Touhou 19 on x86, x64, ARM64)" -ForegroundColor Gray
+Write-Host " (Supports Touhou 06 through Touhou 20 on x86, x64, ARM64)" -ForegroundColor Gray
 Write-Host "========================================================" -ForegroundColor Cyan
 
 # Define Touhou Game Database using pure ASCII patterns and size ranges
 $gameDb = @(
     @{ Id="th06";  Name="Touhou 06: The Embodiment of Scarlet Devil"; Pattern="*th06*.exe"; MinSize=450KB;  MaxSize=650KB;  Gen=1 },
     @{ Id="th07";  Name="Touhou 07: Perfect Cherry Blossom";         Pattern="*th07*.exe"; MinSize=800KB;  MaxSize=1150KB; Gen=1 },
+    @{ Id="th075"; Name="Touhou 07.5: Immaterial and Missing Power";   Pattern="*th075*.exe"; MinSize=2000KB; MaxSize=4000KB; Gen=2 },
     @{ Id="th08";  Name="Touhou 08: Imperishable Night";            Pattern="*th08*.exe"; MinSize=1200KB; MaxSize=1850KB; Gen=1 },
     @{ Id="th09";  Name="Touhou 09: Phantasmagoria of Flower View";   Pattern="*th09*.exe"; MinSize=1500KB; MaxSize=2500KB; Gen=2 },
     @{ Id="th095"; Name="Touhou 09.5: Shoot the Bullet";             Pattern="*th095*.exe"; MinSize=1500KB; MaxSize=2500KB; Gen=2 },
     @{ Id="th10";  Name="Touhou 10: Mountain of Faith";             Pattern="*th10*.exe"; MinSize=2000KB; MaxSize=4000KB; Gen=2 },
+    @{ Id="th105"; Name="Touhou 10.5: Scarlet Weather Rhapsody";     Pattern="*th105*.exe"; MinSize=2000KB; MaxSize=5000KB; Gen=2 },
     @{ Id="th11";  Name="Touhou 11: Subterranean Animism";          Pattern="*th11*.exe"; MinSize=2000KB; MaxSize=4500KB; Gen=2 },
     @{ Id="th12";  Name="Touhou 12: Undefined Fantastic Object";    Pattern="*th12*.exe"; MinSize=2000KB; MaxSize=5000KB; Gen=2 },
     @{ Id="th123"; Name="Touhou 12.3: Hisoutensoku";                Pattern="*th123*.exe"; MinSize=2000KB; MaxSize=6000KB; Gen=2 },
     @{ Id="th125"; Name="Touhou 12.5: Double Spoiler";              Pattern="*th125*.exe"; MinSize=2000KB; MaxSize=5000KB; Gen=2 },
     @{ Id="th128"; Name="Touhou 12.8: Fairy Wars";                  Pattern="*th128*.exe"; MinSize=2000KB; MaxSize=5000KB; Gen=2 },
     @{ Id="th13";  Name="Touhou 13: Ten Desires";                   Pattern="*th13*.exe"; MinSize=2000KB; MaxSize=6000KB; Gen=2 },
+    @{ Id="th135"; Name="Touhou 13.5: Hopeless Masquerade";          Pattern="*th135*.exe"; MinSize=3000KB; MaxSize=10000KB; Gen=3 },
     @{ Id="th14";  Name="Touhou 14: Double Dealing Character";     Pattern="*th14*.exe"; MinSize=3000KB; MaxSize=7000KB; Gen=2 },
     @{ Id="th143"; Name="Touhou 14.3: Impossible Spell Card";       Pattern="*th143*.exe"; MinSize=3000KB; MaxSize=7000KB; Gen=2 },
+    @{ Id="th145"; Name="Touhou 14.5: Urban Legend in Limbo";        Pattern="*th145*.exe"; MinSize=3000KB; MaxSize=10000KB; Gen=3 },
     @{ Id="th15";  Name="Touhou 15: Legacy of Lunatic Kingdom";     Pattern="*th15*.exe"; MinSize=3000KB; MaxSize=8000KB; Gen=2 },
     @{ Id="th155"; Name="Touhou 15.5: Antinomy of Common Flowers"; Pattern="*th155*.exe"; MinSize=5000KB; MaxSize=40000KB; Gen=3 },
     @{ Id="th16";  Name="Touhou 16: Hidden Star in Four Seasons";   Pattern="*th16*.exe"; MinSize=3000KB; MaxSize=8000KB; Gen=3 },
     @{ Id="th165"; Name="Touhou 16.5: Secret Sealing Auto-dap";    Pattern="*th165*.exe"; MinSize=3000KB; MaxSize=8000KB; Gen=3 },
     @{ Id="th17";  Name="Touhou 17: Wily Beast and Weakest Creature"; Pattern="*th17*.exe"; MinSize=3000KB; MaxSize=9000KB; Gen=3 },
+    @{ Id="th175"; Name="Touhou 17.5: Sunken Fossil World";          Pattern="*th175*.exe"; MinSize=4000KB; MaxSize=15000KB; Gen=3 },
     @{ Id="th18";  Name="Touhou 18: Unconnected Marketeers";        Pattern="*th18*.exe"; MinSize=3000KB; MaxSize=9000KB; Gen=3 },
     @{ Id="th185"; Name="Touhou 18.5: 100th Black Market";          Pattern="*th185*.exe"; MinSize=3000KB; MaxSize=9000KB; Gen=3 },
-    @{ Id="th19";  Name="Touhou 19: Unfinished Dream of All Living Ghost"; Pattern="*th19*.exe"; MinSize=4000KB; MaxSize=12000KB; Gen=3 }
+    @{ Id="th19";  Name="Touhou 19: Unfinished Dream of All Living Ghost"; Pattern="*th19*.exe"; MinSize=4000KB; MaxSize=12000KB; Gen=3 },
+    @{ Id="th20";  Name="Touhou 20: Latest Release / Fan Game";      Pattern="*th20*.exe"; MinSize=1000KB; MaxSize=20000KB; Gen=3 }
 )
 
 # 1. Detect Installed Touhou Games
@@ -85,7 +91,7 @@ if ($detectedGames.Count -eq 0) {
                 $_.FullName -notin $claimedExes -and 
                 $_.Name -notlike "custom*" -and 
                 $_.Name -notlike "vpatch*" -and 
-                $_.Name -notlike "th[0-1][0-9]*" -and 
+                $_.Name -notlike "th[0-2][0-9]*" -and 
                 $_.Length -ge $entry.MinSize -and 
                 $_.Length -le $entry.MaxSize 
             } | Select-Object -First 1
@@ -105,7 +111,7 @@ if ($detectedGames.Count -eq 0) {
 }
 
 if ($detectedGames.Count -eq 0) {
-    Write-Host "[!] Error: No Touhou game executable (TH06 through TH19) found in:" -ForegroundColor Red
+    Write-Host "[!] Error: No Touhou game executable (TH06 through TH20) found in:" -ForegroundColor Red
     Write-Host "    $GamePath" -ForegroundColor Red
     Write-Host "    Please run this script inside your Touhou game folder." -ForegroundColor Yellow
     exit 1
@@ -131,7 +137,7 @@ if ($needsD3d8) {
 }
 
 # 3. Download and Install d3dx9_43.dll (For THCRAP Font Overlay Hooks on Direct3D 9 games)
-$needsD3dx9 = ($detectedGames | Where-Object { $_ -in @("th06","th07","th08","th09","th095","th10","th11","th12","th123","th125","th128","th13","th14","th143","th15") }).Count -gt 0
+$needsD3dx9 = ($detectedGames | Where-Object { $_ -in @("th06","th07","th075","th08","th09","th095","th10","th105","th11","th12","th123","th125","th128","th13","th14","th143","th15") }).Count -gt 0
 
 if ($needsD3dx9) {
     $targetD3dx9 = Join-Path $GamePath "d3dx9_43.dll"
@@ -340,7 +346,7 @@ $cfg56Bytes = [byte[]](
     0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00
 )
 
-# 52-byte cfg for TH09 through TH19 (Byte 0x06 = 0x01 Windowed)
+# 52-byte cfg for TH09 through TH20 (Byte 0x06 = 0x01 Windowed)
 $cfg52Bytes = [byte[]](
     0x03, 0x00, 0x10, 0x00, 0x00, 0x00, 0x01, 0x00, 0x02, 0x00, 0x03, 0x00, 0xFF, 0xFF, 0xFF, 0xFF,
     0xFF, 0xFF, 0xFF, 0xFF, 0x04, 0x00, 0x58, 0x02, 0x58, 0x02, 0x00, 0x01, 0x01, 0x01, 0x00, 0x02,
