@@ -6,7 +6,7 @@
 
 ---
 
-A self-contained, single-script installer (**`Install-Touhou-Fix.ps1`**) that **automatically downloads, installs, and configures English translation patches for ALL Touhou Windows games (Touhou 6 through Touhou 19, including Touhou 15.5)** and gets them running natively on modern **Windows 10 / Windows 11 (x86, x64, and ARM64 PCs)**.
+A drag-and-drop installer (**`Install-Touhou-Fix.bat`**) that **automatically downloads, installs, and configures English translation patches for ALL Touhou Windows games (Touhou 6 through Touhou 19, including Touhou 15.5)** and gets them running natively on modern **Windows 10 / Windows 11 (x86, x64, and ARM64 PCs)**.
 
 Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-speed bugs, missing DirectX runtimes, and `thcrap` `"failed to learn d3dx9_43.dll"` warnings in one click.
 
@@ -41,10 +41,10 @@ Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-spe
 
 ---
 
-## ⚡ Quick Start (Automated Setup)
+## ⚡ Quick Start (1-Click Double-Click Setup)
 
-1. Download **`Install-Touhou-Fix.ps1`** and place it inside your Touhou game folder (TH06 through TH19 / TH15.5).
-2. Right-click **`Install-Touhou-Fix.ps1`** -> **Run with PowerShell** (or run `powershell -ExecutionPolicy Bypass -File .\Install-Touhou-Fix.ps1`).
+1. Download **`Install-Touhou-Fix.bat`** (and `Install-Touhou-Fix.ps1`) and drop it into your Touhou game folder (TH06 through TH19 / TH15.5).
+2. Double-click **`Install-Touhou-Fix.bat`**!
 3. The script automatically:
    - Auto-detects which Touhou game(s) are present in the folder (`th06` – `th19` / `th155`)
    - Creates standardized executables (`th06.exe` – `th19.exe`)
@@ -53,17 +53,17 @@ Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-spe
    - Downloads & extracts Microsoft `d3dx9_43.dll` 32-bit runtime
    - Pre-configures Windowed Mode and 60 FPS VPatch (`vpatch.ini`)
    - **Skips downloading components if they are already installed!**
-4. **Launch and play**: Double-click `<game> (thpatch-en).exe` or `<game> (thpatch-en).cmd`!
+4. **Launch and play**: Double-click `<game> (thpatch-en).cmd` or `<game> (thpatch-en).exe`!
 
 ---
 
 ## 🕹️ All Launch & Play Options
 
-Once the script completes, you have full access to **all 4 launch modes**:
+Once the setup completes, you have full access to **all 4 launch modes**:
 
 | Play / Launch Option | How to Launch | Description |
 |---|---|---|
-| **1. English Translation Patch (`thcrap`)** | Double-click `<game> (thpatch-en).exe` / `<game> (thpatch-en).cmd`<br>*(or run `thcrap\bin\thcrap_loader.exe thpatch-en.js <game>`)* | Full live English translation patch stack automatically installed & configured. |
+| **1. English Translation Patch (`thcrap`)** | Double-click `<game> (thpatch-en).cmd` / `<game> (thpatch-en).exe`<br>*(or run `thcrap\bin\thcrap_loader.exe thpatch-en.js <game>`)* | Full live English translation patch stack automatically installed & configured. |
 | **2. 60 FPS VPatch** | Double-click `vpatch.exe` | Locks game framerate to 60 FPS, fixes input latency, and runs in configured window size (960x720). |
 | **3. Original Unpatched Game** | Double-click `<game>.exe` | Native unpatched game executable with Direct3D hardware acceleration. |
 | **4. Settings & Controller Config** | Double-click `custom.exe` | Official configuration utility for pad input, graphics depth, and audio settings. |
