@@ -20,7 +20,7 @@ Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-spe
 | **th07** | Touhou 07: Perfect Cherry Blossom | | |
 | **th08** | Touhou 08: Imperishable Night | | ✅ |
 | **th09** | Touhou 09: Phantasmagoria of Flower View | | ✅ |
-| **th095** | Touhou 09.5: Shoot the Bullet | | |
+| **th095** | Touhou 09.5: Shoot the Bullet | | ✅ |
 | **th10** | Touhou 10: Mountain of Faith | | ✅ |
 | **th105** | Touhou 10.5: Scarlet Weather Rhapsody | | |
 | **th11** | Touhou 11: Subterranean Animism | | |
