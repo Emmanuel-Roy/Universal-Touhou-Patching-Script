@@ -1,4 +1,4 @@
-# Touhou-Classic-Windows11-ARM64-Fix
+# Universal Touhou Patcher
 
 > [!NOTE]
 > **This project was vibe-coded.** ⚡
