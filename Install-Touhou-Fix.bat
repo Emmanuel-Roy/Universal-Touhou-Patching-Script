@@ -173,7 +173,7 @@ if (-not (Test-Path -Path $targetD3dx9 -ErrorAction SilentlyContinue) -or $Force
 }
 
 # 4. Automatically Install THCRAP English Translation Patch Stack & Download All Patch Files
-$thcrapInstalled = (Test-Path (Join-Path $GamePath "thcrap\config\thpatch-en.js")) -and (Test-Path (Join-Path $GamePath "thcrap\repos\nmlgc\repo.js"))
+$thcrapInstalled = (Test-Path (Join-Path $GamePath "thcrap\config\thpatch-en.js")) -and (Test-Path (Join-Path $GamePath "thcrap\repos\nmlgc\base_tsa\versions.js"))
 
 if (-not $thcrapInstalled -or $ForceReinstall) {
     Write-Host "[+] Automatically downloading and installing THCRAP English translation patches..." -ForegroundColor Green
@@ -288,7 +288,7 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
                 }
 
                 if ($raw -and $selectedBaseUrl) {
-                    $matches = [regex]::Matches($raw, '"(' + $g + '[^"]*)"')
+                    $matches = [regex]::Matches($raw, '"(' + $g + '[^"]*|versions\.js|stringdefs\.js)"')
                     $fileKeys = $matches | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique
 
                     if ($fileKeys.Count -gt 0) {
