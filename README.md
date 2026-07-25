@@ -6,7 +6,7 @@
 
 ---
 
-A drag-and-drop installer (**`Install-Touhou-Fix.bat`**) that **automatically downloads, installs, and configures English translation patches for ALL Touhou Windows games (Touhou 6 through Touhou 19, including Touhou 15.5)** and gets them running natively on modern **Windows 10 / Windows 11 (x86, x64, and ARM64 PCs)**.
+A single, self-contained batch file (**`Install-Touhou-Fix.bat`**) that **automatically downloads, installs, and configures English translation patches for ALL Touhou Windows games (Touhou 6 through Touhou 19, including Touhou 15.5)** and gets them running natively on modern **Windows 10 / Windows 11 (x86, x64, and ARM64 PCs)**.
 
 Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-speed bugs, missing DirectX runtimes, and `thcrap` `"failed to learn d3dx9_43.dll"` warnings in one click.
 
@@ -43,7 +43,7 @@ Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-spe
 
 ## ⚡ Quick Start (1-Click Double-Click Setup)
 
-1. Download **`Install-Touhou-Fix.bat`** (and `Install-Touhou-Fix.ps1`) and drop it into your Touhou game folder (TH06 through TH19 / TH15.5).
+1. Download **`Install-Touhou-Fix.bat`** and drop it into your Touhou game folder (TH06 through TH19 / TH15.5).
 2. Double-click **`Install-Touhou-Fix.bat`**!
 3. The script automatically:
    - Auto-detects which Touhou game(s) are present in the folder (`th06` – `th19` / `th155`)
