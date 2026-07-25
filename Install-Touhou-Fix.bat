@@ -1,6 +1,6 @@
 <# :
 @echo off
-title Universal Touhou Patcher
+title Universal Touhou Patching Script
 cd /d "%~dp0"
 powershell -NoProfile -ExecutionPolicy Bypass -Command "$code = [System.IO.File]::ReadAllText('%~f0'); Invoke-Expression $code"
 echo.
@@ -23,7 +23,7 @@ $ErrorActionPreference = "Stop"
 $GamePath = (Get-Location).Path
 
 Write-Host "========================================================" -ForegroundColor Cyan
-Write-Host " Universal Touhou Patcher" -ForegroundColor Cyan
+Write-Host " Universal Touhou Patching Script" -ForegroundColor Cyan
 Write-Host " (Supports Touhou 06 through Touhou 19 on x86, x64, ARM64)" -ForegroundColor Gray
 Write-Host "========================================================" -ForegroundColor Cyan
 

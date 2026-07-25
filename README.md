@@ -1,4 +1,4 @@
-# Universal Touhou Patcher
+# Universal Touhou Patching Script
 
 > [!NOTE]
 > **This project was vibe-coded.** ⚡
