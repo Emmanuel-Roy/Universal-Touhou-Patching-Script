@@ -1,5 +1,11 @@
 # Touhou-Classic-Windows11-ARM64-Fix
 
+> [!NOTE]
+> **This project was vibe-coded.** ⚡
+> Built to get classic Touhou games running seamlessly on modern Windows 10/11 & ARM64 hardware with zero hassle.
+
+---
+
 A self-contained, single-script installer (**`Install-Touhou-Fix.ps1`**) that **automatically downloads, installs, and configures English translation patches** for classic Touhou games (**Touhou 6, 7, and 8**) and gets them running natively on modern **Windows 10 / Windows 11 (x86, x64, and ARM64 PCs)**.
 
 Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-speed bugs, and `thcrap` `"failed to learn d3dx9_43.dll"` warnings in one click.
