@@ -8,9 +8,9 @@
     - Touhou 8: Imperishable Night (th08)
 
     Automatically installs and configures:
+    - THCRAP English translation patches for each detected game automatically
     - Crosire d3d8to9 wrapper (DirectX 8 -> DirectX 9/12)
     - Microsoft d3dx9_43.dll 32-bit runtime (fixes thcrap missing DLL error)
-    - THCRAP English translation patch engine & multi-game configuration
     - Windowed mode & VPatch 60 FPS resolution configuration
     - Launcher shortcuts for English, VPatch, Original, and Settings
 #>
@@ -119,11 +119,11 @@ if (-not (Test-Path "$GamePath\d3dx9_43.dll") -or $ForceReinstall) {
     Write-Host "[+] Microsoft DirectX 9 Extensions (d3dx9_43.dll) already present. Skipping download." -ForegroundColor Gray
 }
 
-# 4. Check THCRAP English Patch Engine
+# 4. Automatically Install THCRAP English Translation Patch Stack
 $thcrapInstalled = (Test-Path "$GamePath\thcrap\config\thpatch-en.js") -or (Test-Path "$GamePath\thcrap\bin\thcrap_loader.exe")
 
 if (-not $thcrapInstalled -or $ForceReinstall) {
-    Write-Host "[+] Installing THCRAP (Touhou English Translation Patcher)..." -ForegroundColor Green
+    Write-Host "[+] Automatically downloading & installing THCRAP English translation patches..." -ForegroundColor Green
     $thcrapZipUrl = "https://github.com/thpatch/thcrap/releases/latest/download/thcrap.zip"
     $thcrapZip = "$GamePath\thcrap_temp.zip"
 
@@ -159,12 +159,21 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
 }
 '@
         Set-Content -Path "$GamePath\thcrap\config\thpatch-en.js" -Value $thpatchEnJs -Encoding UTF8
-        Write-Host "    [OK] THCRAP engine and English patch stack configured." -ForegroundColor Gray
+        Write-Host "    [OK] THCRAP engine and English patch stack automatically installed." -ForegroundColor Gray
     } catch {
         Write-Host "[!] Warning: THCRAP auto-download skipped or failed." -ForegroundColor Yellow
     }
 } else {
     Write-Host "[+] THCRAP English translation patch already installed. Skipping download." -ForegroundColor Gray
+}
+
+# Create double-clickable launchers for English patches if missing
+foreach ($g in $detectedGames) {
+    $batFile = "$GamePath\$g (thpatch-en).cmd"
+    if (-not (Test-Path $batFile) -and -not (Test-Path "$GamePath\$g (thpatch-en).exe")) {
+        $batCmd = "@echo off`r`nstart `"`" `"%~dp0thcrap\bin\thcrap_loader.exe`" thpatch-en.js $g`r`n"
+        Set-Content -Path $batFile -Value $batCmd -Encoding ASCII
+    }
 }
 
 # 5. Configure Windowed Mode and VPatch
@@ -240,8 +249,7 @@ Write-Host " AVAILABLE LAUNCH AND PLAY OPTIONS:" -ForegroundColor Cyan
 Write-Host ""
 foreach ($g in $detectedGames) {
     Write-Host " [$g] Launch Options:" -ForegroundColor White
-    Write-Host "   1. English Patched (thcrap) : double-click '$g (thpatch-en).exe'" -ForegroundColor Yellow
-    Write-Host "                                  or run: thcrap\bin\thcrap_loader.exe thpatch-en.js $g" -ForegroundColor Yellow
+    Write-Host "   1. English Patched (thcrap) : double-click '$g (thpatch-en).exe' or '$g (thpatch-en).cmd'" -ForegroundColor Yellow
     Write-Host "   2. 60 FPS VPatch            : double-click 'vpatch.exe'" -ForegroundColor Yellow
     Write-Host "   3. Original Unpatched Game  : double-click '$g.exe'" -ForegroundColor Yellow
     Write-Host "   4. Settings and Controller  : double-click 'custom.exe'" -ForegroundColor Yellow
