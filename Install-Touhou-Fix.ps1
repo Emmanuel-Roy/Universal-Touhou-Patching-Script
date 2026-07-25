@@ -6,7 +6,7 @@
     - Touhou 6 through Touhou 19 & Touhou 15.5 (th06, th07, th08, th09, th095, th10, th11, th12, th123, th125, th128, th13, th14, th143, th15, th155, th16, th165, th17, th18, th185, th19)
 
     Automatically installs and configures:
-    - THCRAP English translation patches for all detected games automatically
+    - THCRAP English translation patches & repository definitions automatically
     - Crosire d3d8to9 wrapper (DirectX 8 -> DirectX 9/12 for TH06-TH08)
     - Microsoft d3dx9_43.dll 32-bit runtime (fixes thcrap missing DLL error)
     - Windowed mode & VPatch 60 FPS resolution configuration
@@ -130,36 +130,46 @@ if ($needsD3d8) {
 # 3. Download and Install d3dx9_43.dll
 if (-not (Test-Path "$GamePath\d3dx9_43.dll") -or $ForceReinstall) {
     Write-Host "[+] Installing Microsoft DirectX 9 Extensions (d3dx9_43.dll)..." -ForegroundColor Green
-    $dxRedistUrl = "https://download.microsoft.com/download/8/4/a/84a35bf1-dafe-4ae8-82af-ad2ae20b6b14/directx_Jun2010_redist.exe"
-    $tempExe = "$GamePath\dx_redist_temp.exe"
-    $tempDir = "$GamePath\dx_extract_temp"
+    
+    $sysDll = "$env:SystemRoot\SysWOW64\d3dx9_43.dll"
+    if (Test-Path $sysDll) {
+        Copy-Item $sysDll "$GamePath\d3dx9_43.dll" -Force
+        Write-Host "    [OK] d3dx9_43.dll copied from Windows SysWOW64 system directory." -ForegroundColor Gray
+    } elseif (Test-Path "$PSScriptRoot\d3dx9_43.dll") {
+        Copy-Item "$PSScriptRoot\d3dx9_43.dll" "$GamePath\d3dx9_43.dll" -Force
+        Write-Host "    [OK] d3dx9_43.dll copied from local installer folder." -ForegroundColor Gray
+    } else {
+        $dxRedistUrl = "https://download.microsoft.com/download/8/4/a/84a35bf1-dafe-4ae8-82af-ad2ae20b6b14/directx_Jun2010_redist.exe"
+        $tempExe = "$GamePath\dx_redist_temp.exe"
+        $tempDir = "$GamePath\dx_extract_temp"
 
-    try {
-        Invoke-WebRequest -Uri $dxRedistUrl -OutFile $tempExe -UseBasicParsing
-        New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
-        
-        $destPath = (Get-Item $tempDir).FullName
-        Start-Process -FilePath $tempExe -ArgumentList "/T:`"$destPath`" /Q" -Wait
-        
-        if (Test-Path "$tempDir\Jun2010_d3dx9_43_x86.cab") {
-            expand.exe "$tempDir\Jun2010_d3dx9_43_x86.cab" -F:d3dx9_43.dll "$GamePath" | Out-Null
-            Write-Host "    [OK] d3dx9_43.dll extracted and installed successfully." -ForegroundColor Gray
-        }
-    } catch {
-        Write-Host "[!] Warning: Could not download/extract d3dx9_43.dll." -ForegroundColor Yellow
-    } finally {
-        if (Test-Path $tempDir) { Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue }
-        if (Test-Path $tempExe) { 
-            Set-ItemProperty $tempExe -Name IsReadOnly -Value $false -ErrorAction SilentlyContinue
-            Remove-Item $tempExe -Force -ErrorAction SilentlyContinue 
+        try {
+            Invoke-WebRequest -Uri $dxRedistUrl -OutFile $tempExe -UseBasicParsing
+            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+            
+            $destPath = (Get-Item $tempDir).FullName
+            Start-Process -FilePath $tempExe -ArgumentList "/T:`"$destPath`" /Q" -Wait
+            
+            if (Test-Path "$tempDir\Jun2010_d3dx9_43_x86.cab") {
+                expand.exe "$tempDir\Jun2010_d3dx9_43_x86.cab" -F:d3dx9_43.dll "$GamePath" | Out-Null
+                Write-Host "    [OK] d3dx9_43.dll extracted and installed successfully." -ForegroundColor Gray
+            }
+        } catch {
+            Write-Host "[!] Warning: Could not download/extract d3dx9_43.dll." -ForegroundColor Yellow
+        } finally {
+            if (Test-Path $tempDir) { Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue }
+            if (Test-Path $tempExe) { 
+                Set-ItemProperty $tempExe -Name IsReadOnly -Value $false -ErrorAction SilentlyContinue
+                Remove-Item $tempExe -Force -ErrorAction SilentlyContinue 
+            }
         }
     }
 } else {
     Write-Host "[+] Microsoft DirectX 9 Extensions (d3dx9_43.dll) already present. Skipping download." -ForegroundColor Gray
 }
 
-# 4. Automatically Install THCRAP English Translation Patch Stack
-$thcrapInstalled = (Test-Path "$GamePath\thcrap\config\thpatch-en.js") -or (Test-Path "$GamePath\thcrap\bin\thcrap_loader.exe")
+# 4. Automatically Install THCRAP English Translation Patch Stack & Repo Definitions
+$thcrapInstalled = (Test-Path "$GamePath\thcrap\config\thpatch-en.js") -and (Test-Path "$GamePath\thcrap\repos\nmlgc\repo.js")
 
 if (-not $thcrapInstalled -or $ForceReinstall) {
     Write-Host "[+] Automatically downloading and installing THCRAP English translation patches..." -ForegroundColor Green
@@ -167,9 +177,11 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
     $thcrapZip = "$GamePath\thcrap_temp.zip"
 
     try {
-        Invoke-WebRequest -Uri $thcrapZipUrl -OutFile $thcrapZip -UseBasicParsing
-        Expand-Archive -Path $thcrapZip -DestinationPath "$GamePath\thcrap" -Force
-        Remove-Item $thcrapZip -Force -ErrorAction SilentlyContinue
+        if (-not (Test-Path "$GamePath\thcrap\bin\thcrap_loader.exe") -or $ForceReinstall) {
+            Invoke-WebRequest -Uri $thcrapZipUrl -OutFile $thcrapZip -UseBasicParsing
+            Expand-Archive -Path $thcrapZip -DestinationPath "$GamePath\thcrap" -Force
+            Remove-Item $thcrapZip -Force -ErrorAction SilentlyContinue
+        }
         
         # Configure thcrap/config/games.js
         New-Item -ItemType Directory -Path "$GamePath\thcrap\config" -Force | Out-Null
@@ -180,6 +192,44 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
         }
         $gamesJsJson = $gamesJsObj | ConvertTo-Json
         Set-Content -Path "$GamePath\thcrap\config\games.js" -Value $gamesJsJson -Encoding UTF8
+
+        # Configure thcrap/repos/nmlgc/repo.js
+        New-Item -ItemType Directory -Path "$GamePath\thcrap\repos\nmlgc" -Force | Out-Null
+        $nmlgcRepoJs = @'
+{
+    "id": "nmlgc",
+    "title": "nmlgc's patch repository",
+    "contact": "network@thpatch.net",
+    "servers": [
+        "https://srv.thpatch.net/nmlgc/",
+        "https://mirrors.thpatch.net/nmlgc/"
+    ],
+    "patches": {
+        "base_tsa": "Core Touhou patch",
+        "script_latin": "Latin script support",
+        "western_name_order": "Western name order"
+    }
+}
+'@
+        Set-Content -Path "$GamePath\thcrap\repos\nmlgc\repo.js" -Value $nmlgcRepoJs -Encoding UTF8
+
+        # Configure thcrap/repos/thpatch/repo.js
+        New-Item -ItemType Directory -Path "$GamePath\thcrap\repos\thpatch" -Force | Out-Null
+        $thpatchRepoJs = @'
+{
+    "id": "thpatch",
+    "title": "Touhou Patch Center",
+    "contact": "network@thpatch.net",
+    "servers": [
+        "https://srv.thpatch.net/",
+        "https://mirrors.thpatch.net/"
+    ],
+    "patches": {
+        "lang_en": "English language pack"
+    }
+}
+'@
+        Set-Content -Path "$GamePath\thcrap\repos\thpatch\repo.js" -Value $thpatchRepoJs -Encoding UTF8
 
         # Configure thcrap/config/thpatch-en.js
         $thpatchEnJs = @'
@@ -195,7 +245,7 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
 }
 '@
         Set-Content -Path "$GamePath\thcrap\config\thpatch-en.js" -Value $thpatchEnJs -Encoding UTF8
-        Write-Host "    [OK] THCRAP engine and English patch stack automatically installed." -ForegroundColor Gray
+        Write-Host "    [OK] THCRAP engine and English patch repository metadata configured." -ForegroundColor Gray
     } catch {
         Write-Host "[!] Warning: THCRAP auto-download skipped or failed." -ForegroundColor Yellow
     }
