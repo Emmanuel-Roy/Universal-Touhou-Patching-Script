@@ -14,14 +14,14 @@ Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-spe
 
 ## 🎮 Supported Games (Touhou 06 – Touhou 19)
 
-| Game ID | Full Title | x86 / x64 (Tested) | ARM64 (Tested) |
+| Game ID | Full Title | x86 / x64 | ARM64 (Tested) |
 |---|---|:---:|:---:|
 | **th06** | Touhou 06: The Embodiment of Scarlet Devil | | |
 | **th07** | Touhou 07: Perfect Cherry Blossom | | |
 | **th08** | Touhou 08: Imperishable Night | | |
 | **th09** | Touhou 09: Phantasmagoria of Flower View | | |
 | **th095** | Touhou 09.5: Shoot the Bullet | | |
-| **th10** | Touhou 10: Mountain of Faith | ✅ | ✅ |
+| **th10** | Touhou 10: Mountain of Faith | | ✅ |
 | **th11** | Touhou 11: Subterranean Animism | | |
 | **th12** | Touhou 12: Undefined Fantastic Object | | |
 | **th123** | Touhou 12.3: Hisoutensoku | | |
@@ -32,7 +32,7 @@ Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-spe
 | **th143** | Touhou 14.3: Impossible Spell Card | | |
 | **th15** | Touhou 15: Legacy of Lunatic Kingdom | | |
 | **th155** | Touhou 15.5: Antinomy of Common Flowers | | |
-| **th16** | Touhou 16: Hidden Star in Four Seasons | ✅ | ✅ |
+| **th16** | Touhou 16: Hidden Star in Four Seasons | | ✅ |
 | **th165** | Touhou 16.5: Secret Sealing Auto-dap | | |
 | **th17** | Touhou 17: Wily Beast and Weakest Creature | | |
 | **th18** | Touhou 18: Unconnected Marketeers | | |
