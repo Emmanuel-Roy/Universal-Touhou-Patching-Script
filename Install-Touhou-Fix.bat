@@ -29,28 +29,28 @@ Write-Host "========================================================" -Foregroun
 
 # Define Touhou Game Database using pure ASCII patterns and size ranges
 $gameDb = @(
-    @{ Id="th06";  Name="Touhou 06: The Embodiment of Scarlet Devil"; Pattern="*th06*.exe"; MinSize=450KB;  MaxSize=650KB },
-    @{ Id="th07";  Name="Touhou 07: Perfect Cherry Blossom";         Pattern="*th07*.exe"; MinSize=800KB;  MaxSize=1150KB },
-    @{ Id="th08";  Name="Touhou 08: Imperishable Night";            Pattern="*th08*.exe"; MinSize=1200KB; MaxSize=1850KB },
-    @{ Id="th09";  Name="Touhou 09: Phantasmagoria of Flower View";   Pattern="*th09*.exe"; MinSize=1500KB; MaxSize=2500KB },
-    @{ Id="th095"; Name="Touhou 09.5: Shoot the Bullet";             Pattern="*th095*.exe"; MinSize=1500KB; MaxSize=2500KB },
-    @{ Id="th10";  Name="Touhou 10: Mountain of Faith";             Pattern="*th10*.exe"; MinSize=2000KB; MaxSize=4000KB },
-    @{ Id="th11";  Name="Touhou 11: Subterranean Animism";          Pattern="*th11*.exe"; MinSize=2000KB; MaxSize=4500KB },
-    @{ Id="th12";  Name="Touhou 12: Undefined Fantastic Object";    Pattern="*th12*.exe"; MinSize=2000KB; MaxSize=5000KB },
-    @{ Id="th123"; Name="Touhou 12.3: Hisoutensoku";                Pattern="*th123*.exe"; MinSize=2000KB; MaxSize=6000KB },
-    @{ Id="th125"; Name="Touhou 12.5: Double Spoiler";              Pattern="*th125*.exe"; MinSize=2000KB; MaxSize=5000KB },
-    @{ Id="th128"; Name="Touhou 12.8: Fairy Wars";                  Pattern="*th128*.exe"; MinSize=2000KB; MaxSize=5000KB },
-    @{ Id="th13";  Name="Touhou 13: Ten Desires";                   Pattern="*th13*.exe"; MinSize=2000KB; MaxSize=6000KB },
-    @{ Id="th14";  Name="Touhou 14: Double Dealing Character";     Pattern="*th14*.exe"; MinSize=3000KB; MaxSize=7000KB },
-    @{ Id="th143"; Name="Touhou 14.3: Impossible Spell Card";       Pattern="*th143*.exe"; MinSize=3000KB; MaxSize=7000KB },
-    @{ Id="th15";  Name="Touhou 15: Legacy of Lunatic Kingdom";     Pattern="*th15*.exe"; MinSize=3000KB; MaxSize=8000KB },
-    @{ Id="th155"; Name="Touhou 15.5: Antinomy of Common Flowers"; Pattern="*th155*.exe"; MinSize=5000KB; MaxSize=40000KB },
-    @{ Id="th16";  Name="Touhou 16: Hidden Star in Four Seasons";   Pattern="*th16*.exe"; MinSize=3000KB; MaxSize=8000KB },
-    @{ Id="th165"; Name="Touhou 16.5: Secret Sealing Auto-dap";    Pattern="*th165*.exe"; MinSize=3000KB; MaxSize=8000KB },
-    @{ Id="th17";  Name="Touhou 17: Wily Beast and Weakest Creature"; Pattern="*th17*.exe"; MinSize=3000KB; MaxSize=9000KB },
-    @{ Id="th18";  Name="Touhou 18: Unconnected Marketeers";        Pattern="*th18*.exe"; MinSize=3000KB; MaxSize=9000KB },
-    @{ Id="th185"; Name="Touhou 18.5: 100th Black Market";          Pattern="*th185*.exe"; MinSize=3000KB; MaxSize=9000KB },
-    @{ Id="th19";  Name="Touhou 19: Unfinished Dream of All Living Ghost"; Pattern="*th19*.exe"; MinSize=4000KB; MaxSize=12000KB }
+    @{ Id="th06";  Name="Touhou 06: The Embodiment of Scarlet Devil"; Pattern="*th06*.exe"; MinSize=450KB;  MaxSize=650KB;  Gen=1 },
+    @{ Id="th07";  Name="Touhou 07: Perfect Cherry Blossom";         Pattern="*th07*.exe"; MinSize=800KB;  MaxSize=1150KB; Gen=1 },
+    @{ Id="th08";  Name="Touhou 08: Imperishable Night";            Pattern="*th08*.exe"; MinSize=1200KB; MaxSize=1850KB; Gen=1 },
+    @{ Id="th09";  Name="Touhou 09: Phantasmagoria of Flower View";   Pattern="*th09*.exe"; MinSize=1500KB; MaxSize=2500KB; Gen=2 },
+    @{ Id="th095"; Name="Touhou 09.5: Shoot the Bullet";             Pattern="*th095*.exe"; MinSize=1500KB; MaxSize=2500KB; Gen=2 },
+    @{ Id="th10";  Name="Touhou 10: Mountain of Faith";             Pattern="*th10*.exe"; MinSize=2000KB; MaxSize=4000KB; Gen=2 },
+    @{ Id="th11";  Name="Touhou 11: Subterranean Animism";          Pattern="*th11*.exe"; MinSize=2000KB; MaxSize=4500KB; Gen=2 },
+    @{ Id="th12";  Name="Touhou 12: Undefined Fantastic Object";    Pattern="*th12*.exe"; MinSize=2000KB; MaxSize=5000KB; Gen=2 },
+    @{ Id="th123"; Name="Touhou 12.3: Hisoutensoku";                Pattern="*th123*.exe"; MinSize=2000KB; MaxSize=6000KB; Gen=2 },
+    @{ Id="th125"; Name="Touhou 12.5: Double Spoiler";              Pattern="*th125*.exe"; MinSize=2000KB; MaxSize=5000KB; Gen=2 },
+    @{ Id="th128"; Name="Touhou 12.8: Fairy Wars";                  Pattern="*th128*.exe"; MinSize=2000KB; MaxSize=5000KB; Gen=2 },
+    @{ Id="th13";  Name="Touhou 13: Ten Desires";                   Pattern="*th13*.exe"; MinSize=2000KB; MaxSize=6000KB; Gen=2 },
+    @{ Id="th14";  Name="Touhou 14: Double Dealing Character";     Pattern="*th14*.exe"; MinSize=3000KB; MaxSize=7000KB; Gen=2 },
+    @{ Id="th143"; Name="Touhou 14.3: Impossible Spell Card";       Pattern="*th143*.exe"; MinSize=3000KB; MaxSize=7000KB; Gen=2 },
+    @{ Id="th15";  Name="Touhou 15: Legacy of Lunatic Kingdom";     Pattern="*th15*.exe"; MinSize=3000KB; MaxSize=8000KB; Gen=2 },
+    @{ Id="th155"; Name="Touhou 15.5: Antinomy of Common Flowers"; Pattern="*th155*.exe"; MinSize=5000KB; MaxSize=40000KB; Gen=3 },
+    @{ Id="th16";  Name="Touhou 16: Hidden Star in Four Seasons";   Pattern="*th16*.exe"; MinSize=3000KB; MaxSize=8000KB; Gen=3 },
+    @{ Id="th165"; Name="Touhou 16.5: Secret Sealing Auto-dap";    Pattern="*th165*.exe"; MinSize=3000KB; MaxSize=8000KB; Gen=3 },
+    @{ Id="th17";  Name="Touhou 17: Wily Beast and Weakest Creature"; Pattern="*th17*.exe"; MinSize=3000KB; MaxSize=9000KB; Gen=3 },
+    @{ Id="th18";  Name="Touhou 18: Unconnected Marketeers";        Pattern="*th18*.exe"; MinSize=3000KB; MaxSize=9000KB; Gen=3 },
+    @{ Id="th185"; Name="Touhou 18.5: 100th Black Market";          Pattern="*th185*.exe"; MinSize=3000KB; MaxSize=9000KB; Gen=3 },
+    @{ Id="th19";  Name="Touhou 19: Unfinished Dream of All Living Ghost"; Pattern="*th19*.exe"; MinSize=4000KB; MaxSize=12000KB; Gen=3 }
 )
 
 # 1. Detect Installed Touhou Games
@@ -111,7 +111,7 @@ if ($detectedGames.Count -eq 0) {
     exit 1
 }
 
-# 2. Download Crosire d3d8to9 Wrapper (DirectX 8 -> DirectX 9/12 for TH06-TH08)
+# 2. Download Crosire d3d8to9 Wrapper ONLY for Legacy Direct3D 8 Games (TH06, TH07, TH08)
 $needsD3d8 = ($detectedGames -contains "th06") -or ($detectedGames -contains "th07") -or ($detectedGames -contains "th08")
 
 if ($needsD3d8) {
@@ -130,46 +130,50 @@ if ($needsD3d8) {
     }
 }
 
-# 3. Download and Install d3dx9_43.dll
-$targetD3dx9 = Join-Path $GamePath "d3dx9_43.dll"
-if (-not (Test-Path -Path $targetD3dx9 -ErrorAction SilentlyContinue) -or $ForceReinstall) {
-    Write-Host "[+] Installing Microsoft DirectX 9 Extensions (d3dx9_43.dll)..." -ForegroundColor Green
-    
-    $sysDll = "$env:SystemRoot\SysWOW64\d3dx9_43.dll"
+# 3. Download and Install d3dx9_43.dll (For THCRAP Font Overlay Hooks on Direct3D 9 games)
+$needsD3dx9 = ($detectedGames | Where-Object { $_ -in @("th06","th07","th08","th09","th095","th10","th11","th12","th123","th125","th128","th13","th14","th143","th15") }).Count -gt 0
 
-    if (Test-Path -Path $sysDll -ErrorAction SilentlyContinue) {
-        Copy-Item $sysDll $targetD3dx9 -Force
-        Write-Host "    [OK] d3dx9_43.dll copied from Windows SysWOW64 system directory." -ForegroundColor Gray
-    } else {
-        Write-Host "    [...] Downloading Microsoft DirectX 9 package (~95MB)... Please wait..." -ForegroundColor Yellow
-        $dxRedistUrl = "https://download.microsoft.com/download/8/4/a/84a35bf1-dafe-4ae8-82af-ad2ae20b6b14/directx_Jun2010_redist.exe"
-        $tempExe = Join-Path $GamePath "dx_redist_temp.exe"
-        $tempDir = Join-Path $GamePath "dx_extract_temp"
+if ($needsD3dx9) {
+    $targetD3dx9 = Join-Path $GamePath "d3dx9_43.dll"
+    if (-not (Test-Path -Path $targetD3dx9 -ErrorAction SilentlyContinue) -or $ForceReinstall) {
+        Write-Host "[+] Installing Microsoft DirectX 9 Extensions (d3dx9_43.dll)..." -ForegroundColor Green
+        
+        $sysDll = "$env:SystemRoot\SysWOW64\d3dx9_43.dll"
 
-        try {
-            Invoke-WebRequest -Uri $dxRedistUrl -OutFile $tempExe -UseBasicParsing
-            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
-            
-            $destPath = (Get-Item -Path $tempDir).FullName
-            Start-Process -FilePath $tempExe -ArgumentList "/T:`"$destPath`" /Q" -Wait
-            
-            $cabFile = Join-Path $tempDir "Jun2010_d3dx9_43_x86.cab"
-            if (Test-Path -Path $cabFile -ErrorAction SilentlyContinue) {
-                Start-Process -FilePath "expand.exe" -ArgumentList "`"$cabFile`" -F:d3dx9_43.dll `"$GamePath`"" -Wait -WindowStyle Hidden
-                Write-Host "    [OK] d3dx9_43.dll extracted and installed successfully." -ForegroundColor Gray
-            }
-        } catch {
-            Write-Host "[!] Warning: Could not download/extract d3dx9_43.dll." -ForegroundColor Yellow
-        } finally {
-            if (Test-Path $tempDir) { Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue }
-            if (Test-Path $tempExe) { 
-                Set-ItemProperty $tempExe -Name IsReadOnly -Value $false -ErrorAction SilentlyContinue
-                Remove-Item $tempExe -Force -ErrorAction SilentlyContinue 
+        if (Test-Path -Path $sysDll -ErrorAction SilentlyContinue) {
+            Copy-Item $sysDll $targetD3dx9 -Force
+            Write-Host "    [OK] d3dx9_43.dll copied from Windows SysWOW64 system directory." -ForegroundColor Gray
+        } else {
+            Write-Host "    [...] Downloading Microsoft DirectX 9 package (~95MB)... Please wait..." -ForegroundColor Yellow
+            $dxRedistUrl = "https://download.microsoft.com/download/8/4/a/84a35bf1-dafe-4ae8-82af-ad2ae20b6b14/directx_Jun2010_redist.exe"
+            $tempExe = Join-Path $GamePath "dx_redist_temp.exe"
+            $tempDir = Join-Path $GamePath "dx_extract_temp"
+
+            try {
+                Invoke-WebRequest -Uri $dxRedistUrl -OutFile $tempExe -UseBasicParsing
+                New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+                
+                $destPath = (Get-Item -Path $tempDir).FullName
+                Start-Process -FilePath $tempExe -ArgumentList "/T:`"$destPath`" /Q" -Wait
+                
+                $cabFile = Join-Path $tempDir "Jun2010_d3dx9_43_x86.cab"
+                if (Test-Path -Path $cabFile -ErrorAction SilentlyContinue) {
+                    Start-Process -FilePath "expand.exe" -ArgumentList "`"$cabFile`" -F:d3dx9_43.dll `"$GamePath`"" -Wait -WindowStyle Hidden
+                    Write-Host "    [OK] d3dx9_43.dll extracted and installed successfully." -ForegroundColor Gray
+                }
+            } catch {
+                Write-Host "[!] Warning: Could not download/extract d3dx9_43.dll." -ForegroundColor Yellow
+            } finally {
+                if (Test-Path $tempDir) { Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue }
+                if (Test-Path $tempExe) { 
+                    Set-ItemProperty $tempExe -Name IsReadOnly -Value $false -ErrorAction SilentlyContinue
+                    Remove-Item $tempExe -Force -ErrorAction SilentlyContinue 
+                }
             }
         }
+    } else {
+        Write-Host "[+] Microsoft DirectX 9 Extensions (d3dx9_43.dll) already present. Skipping download." -ForegroundColor Gray
     }
-} else {
-    Write-Host "[+] Microsoft DirectX 9 Extensions (d3dx9_43.dll) already present. Skipping download." -ForegroundColor Gray
 }
 
 # 4. Automatically Install THCRAP English Translation Patch Stack & Download All Patch Files
@@ -412,6 +416,5 @@ foreach ($g in $detectedGames) {
     Write-Host "   2. 60 FPS VPatch            : double-click 'vpatch.exe'" -ForegroundColor Yellow
     Write-Host "   3. Original Unpatched Game  : double-click '$g.exe'" -ForegroundColor Yellow
     Write-Host "   4. Settings and Controller  : double-click 'custom.exe'" -ForegroundColor Yellow
-    Write-Host ""
+    Write-Host "========================================================" -ForegroundColor Green
 }
-Write-Host "========================================================" -ForegroundColor Green
