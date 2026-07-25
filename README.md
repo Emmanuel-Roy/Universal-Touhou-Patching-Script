@@ -14,35 +14,35 @@ Fixes startup crashes, 640x480 resolution mode switch errors, 1000 FPS hyper-spe
 
 ## 🎮 Supported Games (Touhou 06 – Touhou 20)
 
-| Game ID | Full Title | x86 / x64 | ARM64 (Tested) |
+| Game ID | Full Title | x86 / x64 (Tested) | ARM64 (Tested) |
 |---|---|:---:|:---:|
-| **th06** | Touhou 06: The Embodiment of Scarlet Devil | | |
-| **th07** | Touhou 07: Perfect Cherry Blossom | | |
-| **th08** | Touhou 08: Imperishable Night | | ✅ |
-| **th09** | Touhou 09: Phantasmagoria of Flower View | | ✅ |
-| **th095** | Touhou 09.5: Shoot the Bullet | | ✅ |
-| **th10** | Touhou 10: Mountain of Faith | | ✅ |
+| **th06** | Touhou 06: The Embodiment of Scarlet Devil | | | ✅ |
+| **th07** | Touhou 07: Perfect Cherry Blossom | | | ✅ |
+| **th08** | Touhou 08: Imperishable Night | | | ✅ |
+| **th09** | Touhou 09: Phantasmagoria of Flower View | | | ✅ |
+| **th095** | Touhou 09.5: Shoot the Bullet | | | ✅ |
+| **th10** | Touhou 10: Mountain of Faith | | | ✅ |
 | **th105** | Touhou 10.5: Scarlet Weather Rhapsody | | |
-| **th11** | Touhou 11: Subterranean Animism | | |
-| **th12** | Touhou 12: Undefined Fantastic Object | | |
+| **th11** | Touhou 11: Subterranean Animism | | | ✅ |
+| **th12** | Touhou 12: Undefined Fantastic Object | | ✅ |
 | **th123** | Touhou 12.3: Hisoutensoku | | |
-| **th125** | Touhou 12.5: Double Spoiler | | |
-| **th128** | Touhou 12.8: Fairy Wars | | |
-| **th13** | Touhou 13: Ten Desires | | |
-| **th135** | Touhou 13.5: Hopeless Masquerade | | |
-| **th14** | Touhou 14: Double Dealing Character | | |
-| **th143** | Touhou 14.3: Impossible Spell Card | | |
+| **th125** | Touhou 12.5: Double Spoiler | | | ✅ |
+| **th128** | Touhou 12.8: Fairy Wars | | | ✅ |
+| **th13** | Touhou 13: Ten Desires | | | ✅ |
+| **th135** | Touhou 13.5: Hopeless Masquerade | | | ✅ |
+| **th14** | Touhou 14: Double Dealing Character | | | ✅ |
+| **th143** | Touhou 14.3: Impossible Spell Card | | | ✅ |
 | **th145** | Touhou 14.5: Urban Legend in Limbo | | |
-| **th15** | Touhou 15: Legacy of Lunatic Kingdom | | |
+| **th15** | Touhou 15: Legacy of Lunatic Kingdom | | | ✅ |
 | **th155** | Touhou 15.5: Antinomy of Common Flowers | | |
-| **th16** | Touhou 16: Hidden Star in Four Seasons | | ✅ |
-| **th165** | Touhou 16.5: Secret Sealing Auto-dap | | |
-| **th17** | Touhou 17: Wily Beast and Weakest Creature | | |
+| **th16** | Touhou 16: Hidden Star in Four Seasons | | | ✅ |
+| **th165** | Touhou 16.5: Secret Sealing Auto-dap | | | ✅ |
+| **th17** | Touhou 17: Wily Beast and Weakest Creature | | | ✅ |
 | **th175** | Touhou 17.5: Sunken Fossil World | | |
-| **th18** | Touhou 18: Unconnected Marketeers | | |
-| **th185** | Touhou 18.5: 100th Black Market | | |
-| **th19** | Touhou 19: Unfinished Dream of All Living Ghost | | |
-| **th20** | Touhou 20: Latest Release / Fan Game | | |
+| **th18** | Touhou 18: Unconnected Marketeers | | | ✅ |
+| **th185** | Touhou 18.5: 100th Black Market | | | ✅ |
+| **th19** | Touhou 19: Unfinished Dream of All Living Ghost | | | ✅ |
+| **th20** | Touhou 20: Fossilized Wonders | | | ✅ |
 
 *(Note: Touhou 7.5 Immaterial and Missing Power is not supported by the THCRAP engine).*
 
