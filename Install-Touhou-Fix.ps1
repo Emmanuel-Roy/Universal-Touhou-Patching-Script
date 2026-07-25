@@ -142,13 +142,20 @@ if (-not (Test-Path $targetD3dx9) -or $ForceReinstall) {
     Write-Host "[+] Installing Microsoft DirectX 9 Extensions (d3dx9_43.dll)..." -ForegroundColor Green
     
     $sysDll = "$env:SystemRoot\SysWOW64\d3dx9_43.dll"
+    $scriptLocalDll = Join-Path $PSScriptRoot "d3dx9_43.dll"
+    $knownLocalDll = "C:\Users\royem\Games\Touhou 6 - The Embodiment of Scarlet Devil\d3dx9_43.dll"
+
     if (Test-Path $sysDll) {
         Copy-Item $sysDll $targetD3dx9 -Force
         Write-Host "    [OK] d3dx9_43.dll copied from Windows SysWOW64 system directory." -ForegroundColor Gray
-    } elseif (Test-Path (Join-Path $PSScriptRoot "d3dx9_43.dll")) {
-        Copy-Item (Join-Path $PSScriptRoot "d3dx9_43.dll") $targetD3dx9 -Force
+    } elseif (Test-Path $scriptLocalDll) {
+        Copy-Item $scriptLocalDll $targetD3dx9 -Force
         Write-Host "    [OK] d3dx9_43.dll copied from local installer folder." -ForegroundColor Gray
+    } elseif (Test-Path $knownLocalDll) {
+        Copy-Item $knownLocalDll $targetD3dx9 -Force
+        Write-Host "    [OK] d3dx9_43.dll copied from local Touhou 6 directory." -ForegroundColor Gray
     } else {
+        Write-Host "    [...] Downloading Microsoft DirectX 9 package (~95MB)... Please wait..." -ForegroundColor Yellow
         $dxRedistUrl = "https://download.microsoft.com/download/8/4/a/84a35bf1-dafe-4ae8-82af-ad2ae20b6b14/directx_Jun2010_redist.exe"
         $tempExe = Join-Path $GamePath "dx_redist_temp.exe"
         $tempDir = Join-Path $GamePath "dx_extract_temp"
@@ -188,6 +195,7 @@ if (-not $thcrapInstalled -or $ForceReinstall) {
 
     try {
         if (-not (Test-Path (Join-Path $GamePath "thcrap\bin\thcrap_loader.exe")) -or $ForceReinstall) {
+            Write-Host "    [...] Downloading THCRAP engine (~30MB)... Please wait..." -ForegroundColor Yellow
             Invoke-WebRequest -Uri $thcrapZipUrl -OutFile $thcrapZip -UseBasicParsing
             Expand-Archive -Path $thcrapZip -DestinationPath (Join-Path $GamePath "thcrap") -Force
             Remove-Item $thcrapZip -Force -ErrorAction SilentlyContinue
